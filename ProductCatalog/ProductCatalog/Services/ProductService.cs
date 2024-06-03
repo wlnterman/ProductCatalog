@@ -3,6 +3,16 @@ using System.Threading.Tasks;
 using ProductCatalog.Data;
 using ProductCatalog.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+
+public interface IProductService
+{
+    Task<IEnumerable<Product>> GetProductsAsync();
+    Task<Product> GetProductByIdAsync(int id);
+    Task CreateProductAsync(CreateProductModel product);
+    Task UpdateProductAsync(Product product);
+    Task DeleteProductAsync(int id);
+}
 
 public class ProductService : IProductService
 {
@@ -22,9 +32,27 @@ public class ProductService : IProductService
     {
         return await _context.Products.FindAsync(id);
     }
-
-    public async Task CreateProductAsync(Product product)
+    //good
+    public async Task CreateProductAsync(CreateProductModel model)
     {
+
+        var category = await _context.Categories.FindAsync(model.CategoryId);
+
+        if (category == null)
+        {
+            throw new Exception($"Category with id {model.CategoryId} not found.");
+        }
+
+        var product = new Product
+        {
+            Name = model.Name,
+            CategoryId = model.CategoryId,
+            Description = model.Description,
+            Price = model.Price,
+            GeneralNote = model.GeneralNote,
+            SpecialNote = model.SpecialNote
+
+        };
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
     }

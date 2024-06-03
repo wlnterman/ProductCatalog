@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ProductCatalog.Models;
 using System.Threading.Tasks;
@@ -10,20 +11,38 @@ namespace ProductCatalog.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserService _userService;
         private readonly IAuthService _authService;
+        private readonly IRoleService _roleService;
 
-        public UserController(IUserService userService, IAuthService authService)
+        public UserController(UserManager<ApplicationUser> userManager,  IUserService userService, IAuthService authService, IRoleService roleService)
         {
+            _userManager = userManager;
             _userService = userService;
             _authService = authService;
+            _roleService = roleService;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(CreateUserModel model)// RegisterModel model)
         {
-            var result = await _userService.RegisterUserAsync(model);
 
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+            };
+
+            //var result = await _userService.RegisterUserAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.Password);
+            //var result = await _userService.RegisterUserAsync(model);
+
+
+
+            //var user2 = await _userManager.FindByNameAsync(model.Username);
+            await _roleService.AssignRoleToUserAsync(user, UserRoles.Administrator);
+            //await _userManager.AddToRoleAsync(user, model.Role);
             if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);

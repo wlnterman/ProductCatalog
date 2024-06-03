@@ -4,6 +4,14 @@ using ProductCatalog.Data;
 using ProductCatalog.Models;
 using Microsoft.EntityFrameworkCore;
 
+public interface ICategoryService
+{
+    Task<IEnumerable<Category>> GetCategoriesAsync();
+    Task<Category> GetCategoryByIdAsync(int id);
+    Task CreateCategoryAsync(Category category);
+    Task UpdateCategoryAsync(Category category);
+    Task DeleteCategoryAsync(int id);
+}
 public class CategoryService : ICategoryService
 {
     private readonly ApplicationDbContext _context;

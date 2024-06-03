@@ -7,6 +7,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Collections.Generic;
 
 public interface IAuthService
 {
@@ -38,19 +39,23 @@ public class AuthService : IAuthService
         }
 
         var user = await _userManager.FindByNameAsync(model.Email);
-        var token = GenerateJwtToken(user);
+        var userRole = await _userManager.GetRolesAsync(user);
+        
+        var token = GenerateJwtToken(user, userRole[0]);
 
         return new LoginResult { Succeeded = true, Token = token };
     }
 
-    private string GenerateJwtToken(ApplicationUser user)
+    private string GenerateJwtToken(ApplicationUser user, string userRole)
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
-
-        var claims = new[]
+        
+        //var claims = new[]
+        var authClaims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.Role, userRole)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]));
@@ -59,7 +64,7 @@ public class AuthService : IAuthService
         var token = new JwtSecurityToken(
             issuer: jwtSettings["Issuer"],
             audience: jwtSettings["Audience"],
-            claims: claims,
+            claims: authClaims,//   claims,
             expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["TokenLifetimeMinutes"])),
             signingCredentials: creds);
 

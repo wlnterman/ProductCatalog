@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\vlll\\Desktop\\Finding Job\\тестовые\\Беларусьбанк\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj": {}
+    "C:\\Users\\vlll\\Desktop\\Finding Job\\TestTasks\\Belarusbank\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj": {}
   },
   "projects": {
-    "C:\\Users\\vlll\\Desktop\\Finding Job\\тестовые\\Беларусьбанк\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj": {
+    "C:\\Users\\vlll\\Desktop\\Finding Job\\TestTasks\\Belarusbank\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\vlll\\Desktop\\Finding Job\\тестовые\\Беларусьбанк\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj",
+        "projectUniqueName": "C:\\Users\\vlll\\Desktop\\Finding Job\\TestTasks\\Belarusbank\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj",
         "projectName": "ProductCatalog",
-        "projectPath": "C:\\Users\\vlll\\Desktop\\Finding Job\\тестовые\\Беларусьбанк\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj",
+        "projectPath": "C:\\Users\\vlll\\Desktop\\Finding Job\\TestTasks\\Belarusbank\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj",
         "packagesPath": "C:\\Users\\vlll\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\vlll\\Desktop\\Finding Job\\тестовые\\Беларусьбанк\\ProductCatalog\\ProductCatalog\\obj\\",
+        "outputPath": "C:\\Users\\vlll\\Desktop\\Finding Job\\TestTasks\\Belarusbank\\ProductCatalog\\ProductCatalog\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\vlll\\AppData\\Roaming\\NuGet\\NuGet.Config",

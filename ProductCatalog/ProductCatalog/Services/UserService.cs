@@ -3,6 +3,16 @@ using ProductCatalog.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 
+public interface IUserService
+{
+    Task<IdentityResult> RegisterUserAsync(CreateUserModel model); //RegisterModel model);
+    Task<IdentityResult> CreateUserAsync(CreateUserModel model);
+    Task<IdentityResult> BlockUserAsync(string userId);
+    Task<IdentityResult> UnblockUserAsync(string userId);
+    Task<IdentityResult> DeleteUserAsync(string userId);
+    Task<IdentityResult> ChangePasswordAsync(string userId, ChangePasswordModel model);
+}
+
 public class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
@@ -20,7 +30,7 @@ public class UserService : IUserService
 
         if (result.Succeeded && !string.IsNullOrEmpty(model.Role))
         {
-            await _userManager.AddToRoleAsync(user, model.Role);
+            await _userManager.AddToRoleAsync(user, UserRoles.Administrator.ToString());
         }
 
         return result;

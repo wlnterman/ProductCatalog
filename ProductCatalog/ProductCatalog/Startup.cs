@@ -46,14 +46,20 @@ namespace ProductCatalog
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<ApplicationUser>()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            //services.AddDefaultIdentity<ApplicationUser>()
+            //    .AddRoles<IdentityRole>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+               .AddEntityFrameworkStores<ApplicationDbContext>()
+               .AddDefaultTokenProviders();
 
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddHttpClient<ICurrencyService, CurrencyService>();
 
             var jwtSettings = Configuration.GetSection("JwtSettings");
             var secretKey = jwtSettings.GetValue<string>("SecretKey");
@@ -104,7 +110,7 @@ namespace ProductCatalog
             services.AddRazorPages();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             
             
@@ -128,6 +134,9 @@ namespace ProductCatalog
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            DataSeeder.SeedRolesAsync(roleManager).Wait();
 
             app.UseEndpoints(endpoints =>
             {

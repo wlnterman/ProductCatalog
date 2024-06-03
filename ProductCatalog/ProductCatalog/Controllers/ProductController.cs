@@ -37,9 +37,9 @@ namespace ProductCatalog.Controllers
             return Ok(product);
         }
 
-        //[Authorize(Roles = "AdvancedUser, Administrator")]
+        [Authorize(Roles = "AdvancedUser, Administrator")]
         [HttpPost]
-        public async Task<ActionResult<Product>> CreateProduct(Product product)
+        public async Task<ActionResult<Product>> CreateProduct(CreateProductModel product)
         {
             await _productService.CreateProductAsync(product);
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);

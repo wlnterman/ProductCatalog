@@ -8,6 +8,13 @@ namespace ProductCatalog.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public string Role { get; set; }
+        //public UserRoles Role { get; set; }
     }
+
+    public class ApplicationRole : IdentityRole
+    {
+
+    }
+
+
 }

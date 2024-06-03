@@ -25,62 +25,64 @@ using ProductCatalog.Models;
             _configuration = configuration;
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] ProductCatalog.Models.RegisterModel model)
-        {
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-            var result = await _userManager.CreateAsync(user, model.Password);
+        //[HttpPost("register")]
+        //public async Task<IActionResult> Register([FromBody] ProductCatalog.Models.CreateUserModel model)
+        //{
+        //    var user = new ApplicationUser { UserName = model.Email, Email = model.Email };//, Role = UserRoles.Administrator };
+        //    var result = await _userManager.CreateAsync(user, model.Password);
+        ////var result = await _userService.RegisterUserAsync(model);
+        ////await _roleService.AssignRoleToUserAsync(user, UserRoles.Administrator);
 
-            if (result.Succeeded)
-            {
-                return Ok();
-            }
+        //if (result.Succeeded)
+        //    {
+        //        return Ok();
+        //    }
 
-            return BadRequest(result.Errors);
-        }
+        //    return BadRequest(result.Errors);
+        //}
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] ProductCatalog.Models.LoginModel model)
-        {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+        //[HttpPost("login")]
+        //public async Task<IActionResult> Login([FromBody] ProductCatalog.Models.LoginModel model)
+        //{
+        //    var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
 
-            if (result.Succeeded)
-            {
-                var user = await _userManager.FindByEmailAsync(model.Email);
-                var tokenString = GenerateJwtToken(user);
-                return Ok(new { token = tokenString });
-            }
+        //    if (result.Succeeded)
+        //    {
+        //        var user = await _userManager.FindByEmailAsync(model.Email);
+        //        var tokenString = GenerateJwtToken(user);
+        //        return Ok(new { token = tokenString });
+        //    }
 
-            return Unauthorized();
-        }
+        //    return Unauthorized();
+        //}
 
-    private string GenerateJwtToken(ApplicationUser user)
-    {
-        var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
+    //private string GenerateJwtToken(ApplicationUser user)
+    //{
+    //    var claims = new[]
+    //        {
+    //            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+    //            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+    //        };
 
 
-        var jwtSettings = _configuration.GetSection("JwtSettings");
+    //    var jwtSettings = _configuration.GetSection("JwtSettings");
 
-        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.GetValue<string>("SecretKey")));
-        var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+    //    var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.GetValue<string>("SecretKey")));
+    //    var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
-        var tokenOptions = new JwtSecurityToken(
-            issuer: jwtSettings.GetValue<string>("Issuer"),
-            audience: jwtSettings.GetValue<string>("Audience"),
-            //claims: new List<Claim>(),
-            claims,
-            expires: DateTime.Now.AddMinutes(jwtSettings.GetValue<double>("TokenLifetimeMinutes")),
-            signingCredentials: signinCredentials
-        );
+    //    var tokenOptions = new JwtSecurityToken(
+    //        issuer: jwtSettings.GetValue<string>("Issuer"),
+    //        audience: jwtSettings.GetValue<string>("Audience"),
+    //        //claims: new List<Claim>(),
+    //        claims,
+    //        expires: DateTime.Now.AddMinutes(jwtSettings.GetValue<double>("TokenLifetimeMinutes")),
+    //        signingCredentials: signinCredentials
+    //    );
 
-        var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+    //    var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-        return tokenString;
-    }
+    //    return tokenString;
+    //}
 
     //private string GenerateJwtToken2(ApplicationUser user)
     //    {
