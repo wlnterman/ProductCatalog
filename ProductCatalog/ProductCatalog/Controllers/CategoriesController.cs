@@ -36,8 +36,7 @@ namespace ProductCatalog.Controllers
             return Ok(category);
         }
 
-        //[Authorize(Roles = "AdvancedUser, Administrator")]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "AdvancedUser, Administrator")]
         [HttpPost]//("add")]
         public async Task<ActionResult<Category>> CreateCategory(Category category)
         {

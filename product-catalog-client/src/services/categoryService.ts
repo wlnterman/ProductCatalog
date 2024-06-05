@@ -14,12 +14,12 @@ export const createCategory = async (category: CreateCategoryFormValues) => {
   return await axios.post(API_URL, category, { headers });
 };
 
-export const updateCategory = async (id: string) => {
+export const updateCategory = async (id: string, category: CreateCategoryFormValues) => {
   const token = localStorage.getItem('token');
   const headers = {
       Authorization: `Bearer ${token}`
   };
-  await axios.put(`${API_URL}/${id}`, { headers });// axios.delete(`${API_URL}/${id}`, { headers });
+  await axios.put(`${API_URL}/${id}`, category, { headers });// axios.delete(`${API_URL}/${id}`, { headers });
 };
 
 

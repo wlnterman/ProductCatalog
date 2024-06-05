@@ -23,7 +23,7 @@ const CreateCategory: React.FC = () => {
   const onSubmit = async (values: CreateCategoryFormValues) => {
     try {
       await createCategory(values);
-      navigate('/categories'); // Redirect to the categories list page after successful creation
+      navigate('/categories');
     } catch (error) {
       console.error('Failed to create category', error);
     }

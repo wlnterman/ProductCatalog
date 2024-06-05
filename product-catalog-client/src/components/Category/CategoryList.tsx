@@ -21,9 +21,7 @@ const CategoryList: React.FC = () => {
     const fetchCategories = async () => {
       try {
         const response = await getCategories();
-        setCategories(response.data);
-        // const categories = response.data;
-        // setCategories(categories.map((category: any) => {category['name']}));
+        setCategories(response);
       } catch (error) {
         message.error('Failed to load categories');
       }
@@ -33,6 +31,7 @@ const CategoryList: React.FC = () => {
   }, []);
 
   const handleEdit = (category: Category) => {
+    console.log(category)
     setEditingCategory(category);
     setIsModalVisible(true);
   };
@@ -55,7 +54,8 @@ const CategoryList: React.FC = () => {
   const handleSave = async (values: Category) => {
     try {
       if (editingCategory) {
-        await updateCategory(editingCategory.id.toString());
+        const updatedValues = { ...values, id: editingCategory.id };
+        await updateCategory(editingCategory.id.toString(), updatedValues);
         setCategories(categories.map((category: Category) => (category.id === editingCategory.id ? { ...category, ...values } : category)));
         message.success('Category updated successfully');
       } else {
@@ -82,7 +82,7 @@ const CategoryList: React.FC = () => {
           key="actions"
           render={(text, record: Category) => (
             <>
-              <Button onClick={() => handleEdit(record)}>Edit</Button>
+              <Button onClick={() => handleEdit(record)} style={{ marginRight: 8 }}>Edit</Button>
               <Button danger onClick={() => handleDelete(record.id)}>Delete</Button>
             </>
           )}

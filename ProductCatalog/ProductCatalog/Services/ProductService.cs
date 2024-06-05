@@ -4,10 +4,11 @@ using ProductCatalog.Data;
 using ProductCatalog.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 
 public interface IProductService
 {
-    Task<IEnumerable<Product>> GetProductsAsync();
+    Task<IEnumerable<ProductDto>> GetProductsAsync();
     Task<Product> GetProductByIdAsync(int id);
     Task CreateProductAsync(CreateProductModel product);
     Task UpdateProductAsync(Product product);
@@ -23,14 +24,32 @@ public class ProductService : IProductService
         _context = context;
     }
 
-    public async Task<IEnumerable<Product>> GetProductsAsync()
+    public async Task<IEnumerable<ProductDto>> GetProductsAsync()
     {
-        return await _context.Products.ToListAsync();
+        var products = await _context.Products
+           .Include(p => p.Category)
+           .Select(p => new ProductDto
+           {
+               Id = p.Id,
+               Name = p.Name,
+               Description = p.Description,
+               Price = p.Price,
+               CategoryId = p.CategoryId,
+               CategoryName = p.Category.Name,
+               GeneralNote = p.GeneralNote,
+               SpecialNote = p.SpecialNote
+           })
+           .ToListAsync();
+
+        return products;
+        //return await _context.Products.Include(p => p.Category).ToListAsync();
+        //return await _context.Products.ToListAsync();
     }
 
     public async Task<Product> GetProductByIdAsync(int id)
     {
-        return await _context.Products.FindAsync(id);
+        return await _context.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == id);
+        //return await _context.Products.FindAsync(id);
     }
     //good
     public async Task CreateProductAsync(CreateProductModel model)

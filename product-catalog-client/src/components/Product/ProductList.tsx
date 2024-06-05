@@ -62,6 +62,7 @@ const ProductList: React.FC = () => {
   const fetchProducts = async () => {
     const products = await getAllProducts();
     setProducts(products);
+    console.log(products)
   };
 
   const fetchUsdExchangeRate = async () => {
@@ -74,6 +75,7 @@ const ProductList: React.FC = () => {
 
       const data = await getCategories();
       setCategories(data)
+      console.log(data)
       // setCategories(data.map((category: any) => category.name));
     
   };
@@ -102,7 +104,8 @@ const ProductList: React.FC = () => {
     try {
       const values = await form.validateFields();
       if (editingProduct) {
-        await updateProduct(editingProduct['id'], values);
+        const updatedValues = { ...values, id: editingProduct['id'] };
+        await updateProduct(editingProduct['id'], updatedValues);
         notification.success({ message: 'Product updated successfully' });
       } else {
         await addProduct(values);
@@ -123,14 +126,14 @@ const ProductList: React.FC = () => {
 
   const columns = [
     {
-      title: 'Name',
+      title: 'Name 656',
       dataIndex: 'name',
       key: 'name',
     },
     {
       title: 'Category',
-      dataIndex: ['category', 'name'],
-      key: 'category',
+      dataIndex: 'categoryName',
+      key: 'categoryName',
     },
     {
       title: 'Description',
@@ -150,6 +153,16 @@ const ProductList: React.FC = () => {
           />
         </>
       ),
+    },
+    {
+      title: 'GeneralNote',
+      dataIndex: 'generalNote',
+      key: 'generalNote',
+    },
+    {
+      title: 'SpecialNote',
+      dataIndex: 'specialNote',
+      key: 'specialNote',
     },
     {
       title: 'Actions',
@@ -197,7 +210,7 @@ const ProductList: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            name="categoryid"
+            name="categoryId"
             label="Category"
             rules={[{ required: true, message: 'Please select a category!' }]}
           >
@@ -222,6 +235,20 @@ const ProductList: React.FC = () => {
             rules={[{ required: true, message: 'Please input the product price!' }]}
           >
             <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            name="generalNote"
+            label="GeneralNote"
+            rules={[{ required: true, message: 'Please input the product generalNote!' }]}
+          >
+            <Input />
+          </Form.Item>
+            <Form.Item
+            name="specialNote"
+            label="SpecialNote"
+            rules={[{ required: true, message: 'Please input the product specialNote!' }]}
+          >
+            <Input />
           </Form.Item>
         </Form>
       </Modal>

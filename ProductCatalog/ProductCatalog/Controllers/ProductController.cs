@@ -19,13 +19,13 @@ namespace ProductCatalog.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts()
         {
             return Ok(await _productService.GetProductsAsync());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<CreateProductModel>> GetProduct(int id)
         {
             var product = await _productService.GetProductByIdAsync(id);
 

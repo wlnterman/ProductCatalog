@@ -9,20 +9,6 @@ import { AxiosError } from 'axios';
 const { Option } = Select;
 
 const Register: React.FC = () => {
-  // const [email, setEmail] = useState<string>('');
-  // const [password, setPassword] = useState<string>('');
-  // const navigate = useNavigate();
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   try {
-  //     await register(email, password);
-  //     navigate('/login');
-  //   } catch (error) {
-  //     console.error('Registration failed:', error);
-  //   }
-  // };
-
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -104,20 +90,6 @@ const Register: React.FC = () => {
         </Form>
       </Card>
     </Row>
-    // <div>
-    //   <h2>Register</h2>
-    //   <form onSubmit={handleSubmit}>
-    //     <div>
-    //       <label>Email</label>
-    //       <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-    //     </div>
-    //     <div>
-    //       <label>Password</label>
-    //       <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-    //     </div>
-    //     <button type="submit">Register</button>
-    //   </form>
-    // </div>
   );
 }
 

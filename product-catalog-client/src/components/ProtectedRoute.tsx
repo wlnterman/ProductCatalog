@@ -22,7 +22,8 @@ const ProtectedRoute = ({ children, roles }: { children: React.ReactNode, roles 
   const { currentUser } = useAuth();
 
   if (!currentUser) return <Navigate to="/login" replace />;
- 
+  console.log("-------------")
+  console.log(currentUser["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])
   if (roles && roles.indexOf(currentUser["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]) === -1) {
     return <Navigate to="/unauthorized" />;
   }

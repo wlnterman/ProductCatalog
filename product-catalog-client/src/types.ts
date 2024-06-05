@@ -35,4 +35,17 @@ export interface LoginModel {
     password: string;
 }
 
-// Примечание: дополнительные типы можно добавить по мере необходимости для других частей вашего приложения
+export interface Category {
+    id: string;
+    name: string;
+}
+
+export interface Product {
+    id: string;
+    name: string;
+    category: Category;
+    description: string;
+    price: string;
+    generalNote: string;
+    specialNote: string;
+}
