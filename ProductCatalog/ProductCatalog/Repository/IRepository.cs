@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 
 namespace ProductCatalog.Repository
 {
-
-
     interface IRepository<T> : IDisposable
         where T : class
     {

@@ -10,6 +10,7 @@ public interface IRoleService
 {
     //Task EnsureRolesExist();
     Task AssignRoleToUserAsync(ApplicationUser user, UserRoles roleName);
+    public UserRoles GetRoleByStringValue(string role);
 }
 
 
@@ -17,7 +18,7 @@ public enum UserRoles
 {
     Administrator,
     AdvancedUser,
-    SimpleUser
+    User
 }
 
 
@@ -68,6 +69,22 @@ public class RoleService : IRoleService
         await _userManager.AddToRoleAsync(user, roleName);
     }
 
+    public UserRoles GetRoleByStringValue(string role)
+    {
+        var roleDict = new Dictionary<string, UserRoles>
+        {
+            { "Administrator", UserRoles.Administrator },
+            { "AdvancedUser", UserRoles.AdvancedUser },
+            { "SimpleUser", UserRoles.User }
+        };
+
+        string[] roleNames = { "Administrator", "AdvancedUser", "SimpleUser" };
+        if (!roleDict.ContainsKey(role))
+            throw new Exception($"Role {role} does not exist.");
+        else
+            return roleDict[role];
+    }
+
     //public async Task EnsureRolesExist()
     //{
     //    string[] roleNames = { UserRoles.Administrator, UserRoles.AdvancedUser, UserRoles.SimpleUser };
@@ -86,7 +103,7 @@ public class DataSeeder
 {
     public static async Task SeedRolesAsync(RoleManager<ApplicationRole> roleManager)
     {
-        string[] roleNames = { "Administrator", "AdvancedUser", "SimpleUser" };
+        string[] roleNames = { "Administrator", "AdvancedUser", "User" };
 
         foreach (var roleName in roleNames)
         {

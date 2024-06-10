@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ProductCatalog.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 
@@ -25,7 +26,7 @@ namespace ProductCatalog.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(CreateUserModel model)// RegisterModel model)
+        public async Task<IActionResult> Register(UserModelDto model)// RegisterModel model)
         {
 
             var user = new ApplicationUser
@@ -64,11 +65,33 @@ namespace ProductCatalog.Controllers
             return Ok(new { Token = result.Token });
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        public async Task<ActionResult<IEnumerable<UserModelDto>>> GetAllUsers()
+        {
+            var users = await _userService.GetAllUsersAsync();
+            return Ok(users);
+        }
+
         [Authorize(Roles = "Administrator")]
         [HttpPost("create")]
-        public async Task<IActionResult> CreateUser(CreateUserModel model)
+        public async Task<IActionResult> CreateUser(UserModelDto model)
         {
             var result = await _userService.CreateUserAsync(model);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(string id, UserModelDto model)
+        {
+            var result = await _userService.UpdateUserAsync(model);
 
             if (!result.Succeeded)
             {
@@ -121,7 +144,7 @@ namespace ProductCatalog.Controllers
         }
 
         [Authorize(Roles = "Administrator")]
-        [HttpPut("password/{id}")]
+        [HttpPut("change-password/{id}")]
         public async Task<IActionResult> ChangePassword(string id, ChangePasswordModel model)
         {
             var result = await _userService.ChangePasswordAsync(id, model);

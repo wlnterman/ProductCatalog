@@ -12,8 +12,9 @@ import CreateCategory from './components/Category/CreateCategory';
 import CategoryList from './components/Category/CategoryList';
 import Navigation from './components/Navigation';
 import AssignRole from './components/Auth/AssignRole';
-import { AuthProvider } from './components/authContext';
+//123import { AuthProvider } from './components/authContext';
 import { UserRoles } from './types';
+import { AuthProvider } from './components/authContext2';
 
 
 const App: React.FC = () => {
@@ -26,21 +27,22 @@ const App: React.FC = () => {
       <div className="App">
       <Navigation />
         <Routes>
-          <Route path="/" element={<Home/>} />
+          
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register/>} />
-        
-          <Route path="/products" element={<ProtectedRoute roles={[UserRoles.Administrator, UserRoles.AdvancedUser,]} ><ProductList /></ProtectedRoute>}/> 
-          <Route path="/add-product" element={<ProtectedRoute  roles={[UserRoles.Administrator, UserRoles.AdvancedUser,]}><CreateProduct /></ProtectedRoute>}/>
+
+          <Route path="/" element={<ProtectedRoute roles={[UserRoles.Administrator, UserRoles.AdvancedUser, UserRoles.User]} ><Home /></ProtectedRoute>}/> 
+          <Route path="/products" element={<ProtectedRoute roles={[UserRoles.Administrator, UserRoles.AdvancedUser, UserRoles.User]} ><ProductList /></ProtectedRoute>}/> 
+          <Route path="/add-product" element={<ProtectedRoute  roles={[UserRoles.Administrator, UserRoles.AdvancedUser]}><CreateProduct /></ProtectedRoute>}/>
           <Route path="/product/edit/:id" element={<ProtectedRoute roles={[UserRoles.Administrator]}><CreateProduct /></ProtectedRoute>}/> 
-          <Route path="/categories" element={<ProtectedRoute roles={[UserRoles.Administrator]}><CategoryList /></ProtectedRoute>}/> 
+          <Route path="/categories" element={<ProtectedRoute roles={[UserRoles.Administrator, UserRoles.AdvancedUser, UserRoles.User]}><CategoryList /></ProtectedRoute>}/> 
           <Route path="/add-category" element={<ProtectedRoute roles={[UserRoles.Administrator]}><CreateCategory /></ProtectedRoute>}/>
           <Route path="/assign-role" element={<ProtectedRoute roles={[UserRoles.Administrator]}><AssignRole /></ProtectedRoute>}/>
           
-          {/* {currentUser && currentUser === 'admin' && ( */}
+
           
-            <Route path="/admin" element={<ProtectedRoute roles={[UserRoles.Administrator]}><AdminPanel /></ProtectedRoute>}/>
-          {/* )} */}
+          <Route path="/admin" element={<ProtectedRoute roles={[UserRoles.Administrator]}><AdminPanel /></ProtectedRoute>}/>
+
           {/*
           //https://localhost:3000/
           {currentUser && currentUser.role === 'admin' && (

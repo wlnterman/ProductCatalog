@@ -34,11 +34,14 @@
 // export default ProductList;
 
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, Select, notification } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, Select, notification, Tag } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, DollarOutlined } from '@ant-design/icons';
 import { getAllProducts, addProduct, updateProduct, deleteProduct, getUsdExchangeRate } from '../../services/productService';
 import { number } from 'yup';
 import { getCategories } from '../../services/categoryService';
+//123import { useAuth } from '../authContext';
+import { UserRoles } from '../../types';
+import { useAuth } from '../authContext2';
 
 
 
@@ -50,6 +53,7 @@ const ProductList: React.FC = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [usdExchangeRate, setUsdExchangeRate] = useState(0);
+  const { currentUser } = useAuth();
 
   const [form] = Form.useForm();
 
@@ -95,9 +99,14 @@ const ProductList: React.FC = () => {
   };
 
   const handleDelete = async (productId: string) => {
-    await deleteProduct(productId);
-    notification.success({ message: 'Product deleted successfully' });
-    fetchProducts();
+    Modal.confirm({
+      title: 'Are you sure you want to delete this category?',
+      onOk: async () => {
+          await deleteProduct(productId);
+          notification.success({ message: 'Product deleted successfully' });
+          fetchProducts();
+      }
+    });   
   };
 
   const handleOk = async () => {
@@ -123,10 +132,12 @@ const ProductList: React.FC = () => {
     setIsModalVisible(false);
     form.resetFields();
   };
-
+  console.log(currentUser)
+  console.log(currentUser?.role)
+  console.log(currentUser && currentUser.role !== UserRoles.User)
   const columns = [
     {
-      title: 'Name 656',
+      title: 'Name',
       dataIndex: 'name',
       key: 'name',
     },
@@ -159,28 +170,33 @@ const ProductList: React.FC = () => {
       dataIndex: 'generalNote',
       key: 'generalNote',
     },
+    
+    //(currentUser && currentUser.role !== UserRoles.User) ? {
     {
-      title: 'SpecialNote',
+      title: <>SpecialNote <Tag bordered={false} color="#f50">Advanced User</Tag></>,
       dataIndex: 'specialNote',
       key: 'specialNote',
-    },
+      render:  (specialNote: any) => ((currentUser && currentUser.role !== UserRoles.User) && <>{specialNote}</>)
+    },//:{},
     {
       title: 'Actions',
       key: 'actions',
       render: (text: string, record: any) => (
-        <>
+         <>
           <Button
             icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
             style={{ marginRight: 8 }}
           />
-          <Button
+          {currentUser && currentUser.role !== UserRoles.User && (<Button
             icon={<DeleteOutlined />}
             onClick={() => handleDelete(record.id)}
-          />
+          />)}
         </>
       ),
     },
+    
+   
   ];
 
   return (

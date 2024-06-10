@@ -5,7 +5,7 @@ import { LoginModel } from '../../types';
 import React, { useState } from 'react';
 import { Form, Input, Button, notification, Col, Card, Row, Divider, Space, Flex } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // import { login } from '../services/authService';
 import { AxiosError } from 'axios';
 import { login } from '../../services/authService';
@@ -56,9 +56,9 @@ const Login: React.FC = () => {
   // };
 
   return (
-    <Row justify="center" align="middle" style={{marginTop:"300px"}} >
+    <Row justify="center" align="middle" style={{marginTop:"250px" }} >
       {/* style={{ minHeight: '100vh' }}> */}
-      <Card style={{ justifyContent:'center', alignItems:'center', width: 500}} >
+      <Card style={{ justifyContent:'center', alignItems:'center', width: 500, backgroundColor: "#bae0ff"}} >
         <Form
           name="login"
           onFinish={onFinish}
@@ -83,6 +83,10 @@ const Login: React.FC = () => {
               Login
             </Button>
           </Form.Item>
+          <Row align='middle' justify="center">
+            Don't have an account?<Link to="/register"><Button type="link">Register</Button></Link>
+          </Row>
+          
         </Form>
       </Card>
     </Row>

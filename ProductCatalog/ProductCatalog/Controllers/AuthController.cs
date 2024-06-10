@@ -26,7 +26,7 @@ using ProductCatalog.Models;
         }
 
         //[HttpPost("register")]
-        //public async Task<IActionResult> Register([FromBody] ProductCatalog.Models.CreateUserModel model)
+        //public async Task<IActionResult> Register([FromBody] ProductCatalog.Models.UserModelDto model)
         //{
         //    var user = new ApplicationUser { UserName = model.Email, Email = model.Email };//, Role = UserRoles.Administrator };
         //    var result = await _userManager.CreateAsync(user, model.Password);

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input, message } from 'antd';
 import axios from 'axios';
-import { useAuth } from '../authContext';
+//123import { useAuth } from '../authContext';
 import { createCategory, deleteCategory, getCategories, updateCategory } from '../../services/categoryService';
+import { useAuth } from '../authContext2';
 
 
 // Определение интерфейса для категории
 interface Category {
-  id: number;
+  id: string;
   name: string;
 }
 
@@ -17,16 +18,16 @@ const CategoryList: React.FC = () => {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null); // Типизация редактируемой категории
   const { currentUser } = useAuth();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getCategories();
-        setCategories(response);
-      } catch (error) {
-        message.error('Failed to load categories');
-      }
-    };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await getCategories();
+      setCategories(response);
+    } catch (error) {
+      message.error('Failed to load categories');
+    }
+  };
+  useEffect(() => {
     fetchCategories();
   }, []);
 
@@ -36,14 +37,20 @@ const CategoryList: React.FC = () => {
     setIsModalVisible(true);
   };
 
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteCategory(id.toString());
-      setCategories(categories.filter((category: Category) => category.id !== id));
-      message.success('Category deleted successfully');
-    } catch (error) {
-      message.error('Failed to delete category');
-    }
+  const handleDelete = async (id: string) => {
+    Modal.confirm({
+      title: 'Are you sure you want to delete this category?',
+      onOk: async () => {
+        try {
+          await deleteCategory(id);
+          //setCategories(categories.filter((category: Category) => category.id !== id));
+          message.success('Category deleted successfully');
+          fetchCategories();
+        } catch (error) {
+          message.error('Failed to delete category');
+        }
+      },
+    });   
   };
 
   const handleCancel = () => {
@@ -55,7 +62,7 @@ const CategoryList: React.FC = () => {
     try {
       if (editingCategory) {
         const updatedValues = { ...values, id: editingCategory.id };
-        await updateCategory(editingCategory.id.toString(), updatedValues);
+        await updateCategory(editingCategory.id, updatedValues);
         setCategories(categories.map((category: Category) => (category.id === editingCategory.id ? { ...category, ...values } : category)));
         message.success('Category updated successfully');
       } else {

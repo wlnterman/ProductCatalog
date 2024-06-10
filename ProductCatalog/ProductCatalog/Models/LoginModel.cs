@@ -11,19 +11,13 @@ namespace ProductCatalog.Models
         public string Password { get; set; }
     }
 
-    public class RegisterModel  //заменено на креэйт в юзерсервис 16 строка
+    public class UserModelDto
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
-
-    }
-
-    public class CreateUserModel
-    {
+        public string ID { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string Role { get; set; } // Роль пользователя: "Простой пользователь", "Продвинутый пользователь", "Администратор"
+        public string Role { get; set; }
     }
 
     public class ChangePasswordModel

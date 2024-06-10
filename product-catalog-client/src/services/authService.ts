@@ -12,23 +12,11 @@ export const login = async (loginModel: LoginModel): Promise<AuthResponse> => {
   }
   return response.data;
 };
-// export const login = async (email: string, password: string) => {
-//   const response = await axios.post(`${API_URL}/login`, { email, password });
-//   if (response.data.token) {
-//     localStorage.setItem('token', response.data.token);
-//   }
-//   return response.data;
-// };
-
-
 
 export const register = async (registerModel: RegisterModel): Promise<void> => {
   const response = await axios.post(`${API_URL}/register`, registerModel);
   return response.data;
 };
-// export const register = async (email: string, password: string) => {
-//   return await axios.post(`${API_URL}/register`, { email, password });
-// };
 
 export const logout = () => {
   //localStorage.removeItem('user');

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Select, notification, Row, Card } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserRoles } from '../../types';
 import { register } from '../../services/authService';
 import { AxiosError } from 'axios';
@@ -33,7 +33,7 @@ const Register: React.FC = () => {
   };  
 
   return (
-    <Row justify="center" align="middle" style={{marginTop:"300px"}} >
+    <Row justify="center" align="middle" style={{marginTop:"150px"}} >
       {/* style={{ minHeight: '100vh' }}> */}
       <Card style={{ justifyContent:'center', alignItems:'center', width: 500}} >
 
@@ -87,6 +87,9 @@ const Register: React.FC = () => {
               Register
             </Button>
           </Form.Item>
+          <Row align='middle' justify="center">
+            Already have an account?<Link to="/login"><Button type="link">Login</Button></Link>
+          </Row>
         </Form>
       </Card>
     </Row>
