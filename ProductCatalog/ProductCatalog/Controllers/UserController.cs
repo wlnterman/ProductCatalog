@@ -40,7 +40,6 @@ namespace ProductCatalog.Controllers
             //var result = await _userService.RegisterUserAsync(model);
 
 
-
             //var user2 = await _userManager.FindByNameAsync(model.Username);
             await _roleService.AssignRoleToUserAsync(user, UserRoles.Administrator);
             //await _userManager.AddToRoleAsync(user, model.Role);

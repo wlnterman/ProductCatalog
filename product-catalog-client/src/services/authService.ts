@@ -43,18 +43,3 @@ export const getCurrentUser = () => {
     return null;
   }
 };
-
-export const assignRole = async (username: string, role: string) => {
-  const token = localStorage.getItem('token'); // Получаем токен из localStorage
-  const headers = {
-    Authorization: `Bearer ${token}`
-  };
-  await axios.post(`${API_URL}/assign-role`, { username, role }, { headers });
-};
-
-
-
-
-
-
-

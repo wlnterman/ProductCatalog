@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using ProductCatalog.Data;
 using ProductCatalog.Models;
+using ProductCatalog.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,11 +31,9 @@ namespace ProductCatalog
 
         public IConfiguration Configuration { get; }
 
-     
-
         public void ConfigureServices(IServiceCollection services)
         {
-
+            //CORS
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -54,6 +54,7 @@ namespace ProductCatalog
                .AddEntityFrameworkStores<ApplicationDbContext>()
                .AddDefaultTokenProviders();
 
+            //Services
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IUserService, UserService>();
@@ -61,9 +62,15 @@ namespace ProductCatalog
             services.AddScoped<IAuthService, AuthService>();
             services.AddHttpClient<ICurrencyService, CurrencyService>();
 
+            //repository
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+
+            //JWT
             var jwtSettings = Configuration.GetSection("JwtSettings");
             var secretKey = jwtSettings.GetValue<string>("SecretKey");
-
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -110,10 +117,8 @@ namespace ProductCatalog
             services.AddRazorPages();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider, ILogger<Startup> logger)
         {
-            
-            
 
             if (env.IsDevelopment())
             {
@@ -145,6 +150,8 @@ namespace ProductCatalog
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            logger.LogInformation("Application started.");
         }
     }
 }

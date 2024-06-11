@@ -11,7 +11,6 @@ import CreateProduct from './components/Product/CreateProduct';
 import CreateCategory from './components/Category/CreateCategory';
 import CategoryList from './components/Category/CategoryList';
 import Navigation from './components/Navigation';
-import AssignRole from './components/Auth/AssignRole';
 //123import { AuthProvider } from './components/authContext';
 import { UserRoles } from './types';
 import { AuthProvider } from './components/authContext2';
@@ -37,17 +36,7 @@ const App: React.FC = () => {
           <Route path="/product/edit/:id" element={<ProtectedRoute roles={[UserRoles.Administrator]}><CreateProduct /></ProtectedRoute>}/> 
           <Route path="/categories" element={<ProtectedRoute roles={[UserRoles.Administrator, UserRoles.AdvancedUser, UserRoles.User]}><CategoryList /></ProtectedRoute>}/> 
           <Route path="/add-category" element={<ProtectedRoute roles={[UserRoles.Administrator]}><CreateCategory /></ProtectedRoute>}/>
-          <Route path="/assign-role" element={<ProtectedRoute roles={[UserRoles.Administrator]}><AssignRole /></ProtectedRoute>}/>
-          
-
-          
           <Route path="/admin" element={<ProtectedRoute roles={[UserRoles.Administrator]}><AdminPanel /></ProtectedRoute>}/>
-
-          {/*
-          //https://localhost:3000/
-          {currentUser && currentUser.role === 'admin' && (
-            <PrivateRoute path="/admin" component={AdminPanel} />
-          )} */}
         </Routes>
       </div>
     </Router>

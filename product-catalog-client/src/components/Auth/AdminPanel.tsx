@@ -265,7 +265,7 @@ const AdminPanel: React.FC = () => {
         </Form>
       </Modal>
       <Modal
-        title={ "Change Password For " + editingUser!.email }
+        title={ "Change Password For " + (editingUser !== null && editingUser.email) }
         visible={isPasswordModalVisible}
         onOk={handlePasswordSave}
         onCancel={handlePasswordCancel}
