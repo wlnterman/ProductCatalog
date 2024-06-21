@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getCurrentUser } from '../services/authService';
+//import { getCurrentUser } from '../../services/authService';
 import { Card, Col, Row, Space } from 'antd';
 
 interface AuthContextType {
@@ -21,9 +21,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   
   // currentUser["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
   useEffect(() => {
-    const user = getCurrentUser();
-    setCurrentUser(user as any);
-    ///fasfasfasf  as role
+    //const user = getCurrentUser();
+    //setCurrentUser(user as any);
+    /////fasfasfasf  as role
   }, []);
 
   return (

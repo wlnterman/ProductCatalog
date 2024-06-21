@@ -16,6 +16,7 @@ public interface IUserService
     Task<IdentityResult> DeleteUserAsync(string userId);
     Task<IdentityResult> ChangePasswordAsync(string userId, ChangePasswordModel model);
     Task<IEnumerable<UserModelDto>> GetAllUsersAsync();
+    Task<UserModelDto> GetUserByIdAsync(string userId);
 }
 
 public class UserService : IUserService
@@ -44,23 +45,48 @@ public class UserService : IUserService
             usersDtoList.Add(new UserModelDto
             {
                 ID = user.Id,
-                Username = user.UserName,
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 Email = user.Email,
-                Role = roles.FirstOrDefault()
-            });
+                Role = roles.FirstOrDefault(),
+                IsLocked = user.LockoutEnd != null
+            }); ;
             }
         return usersDtoList;
         //return await Task.Run(() => _userManager.Users.ToList());
     }
 
+    public async Task<UserModelDto> GetUserByIdAsync(string userId)
+    {
+        var users = await Task.Run(() => _userRepository.GetAllUsersAsync());//_userManager.Users.ToList());
+        var user = users.FirstOrDefault(x => x.Id == userId);
+
+        var roles = await _userRepository.GetRolesAsync(user); //await _userManager.GetRolesAsync(user);
+        var userDto = new UserModelDto
+        {
+            ID = user.Id,
+            UserName = user.UserName,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email,
+            Role = roles.FirstOrDefault()
+        };
+        
+        return userDto;
+        //return await Task.Run(() => _userManager.Users.ToList());
+    }
+
     public async Task<IdentityResult> CreateUserAsync(UserModelDto model)
     {
-        var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
+        
+        var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
         var result = await _userRepository.AddUserAsync(user, model.Password);//await _userManager.CreateAsync(user, model.Password);
 
         if (result.Succeeded && !string.IsNullOrEmpty(model.Role))
         {
-            await _userRepository.AddToRoleAsync(user, model.Role); //await _userManager.AddToRoleAsync(user, model.Role);
+            await _roleService.AssignRoleToUserAsync(user, model.Role);//UserRoles.Administrator);
+            //await _userRepository.AddToRoleAsync(user, model.Role); //await _userManager.AddToRoleAsync(user, model.Role);
         }
 
         return result;
@@ -70,11 +96,15 @@ public class UserService : IUserService
     {
         var user = await _userRepository.GetUserByIdAsync(model.ID); //await _userManager.FindByIdAsync(model.ID);
         user.Email = model.Email;
-        user.UserName = model.Username;
+        user.UserName = model.UserName;
+        user.FirstName = model.FirstName;
+        user.LastName = model.LastName;
 
         var roles = await _userRepository.GetRolesAsync(user);//await _userManager.GetRolesAsync(user);
         var result = await _userRepository.UpdateUserAsync(user); //await _userManager.UpdateAsync(user);
 
+
+        //перенести эту херню в рол сервис!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (result.Succeeded && !string.IsNullOrEmpty(model.Role))
         {
             if(roles.FirstOrDefault() != null)

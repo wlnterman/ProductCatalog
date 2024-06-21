@@ -1,7 +1,3 @@
-
-
-import { LoginModel } from '../../types';
-
 import React, { useState } from 'react';
 import { Form, Input, Button, notification, Col, Card, Row, Divider, Space, Flex } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
@@ -9,19 +5,22 @@ import { Link, useNavigate } from 'react-router-dom';
 // import { login } from '../services/authService';
 import { AxiosError } from 'axios';
 import { login } from '../../services/authService';
+import { useAuth } from '../Context/authContext2';
 
 const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const { login: authLogin } = useAuth();
   const navigate = useNavigate();
 
   const onFinish = async (values: { email: string; password: string }) => {
     setLoading(true);
     try {
-      await login(values);
+      const token = await login(values);
       notification.success({
         message: 'Login Successful',
         description: 'You have successfully logged in!',
       });
+      authLogin(token);
       navigate('/');
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -40,20 +39,6 @@ const Login: React.FC = () => {
       setLoading(false);
     }
   };
-  // const [email, setEmail] = useState<string>('');
-  // const [password, setPassword] = useState<string>('');
-  // const navigate = useNavigate();
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   try {
-  //     await login( (LoginModel) { email, password}).then(() => {
-  //       navigate('/products');
-  //     })
-  //   } catch (error) {
-  //     console.error('Login failed:', error);
-  //   }
-  // };
 
   return (
     <Row justify="center" align="middle" style={{marginTop:"250px" }} >
@@ -92,22 +77,5 @@ const Login: React.FC = () => {
     </Row>
   );
 };
-  //   <>
-  //   <div>
-  //     <h2>Login</h2>
-  //     <form onSubmit={handleSubmit}>
-  //       <div>
-  //         <label>Email 123</label>
-  //         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-  //       </div>
-  //       <div>
-  //         <label>Password</label>
-  //         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-  //       </div>
-  //       <button type="submit"> Login </button>
-  //     </form>
-  //   </div>
-     
-  //  </>
 
 export default Login;

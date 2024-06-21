@@ -9,8 +9,8 @@ using ProductCatalog.Models;
 public interface IRoleService
 {
     //Task EnsureRolesExist();
-    Task AssignRoleToUserAsync(ApplicationUser user, UserRoles roleName);
-    public UserRoles GetRoleByStringValue(string role);
+    Task AssignRoleToUserAsync(ApplicationUser user, string roleName);
+    Task<UserRoles> GetRoleByStringValue(string role);
 }
 
 
@@ -45,20 +45,15 @@ public class RoleService : IRoleService
     //    return await _roleManager.FindByNameAsync(roleName);
     //}
 
-        public async Task AssignRoleToUserAsync(ApplicationUser user, UserRoles role)
+    public async Task<string> GetUserRole(ApplicationUser user)
     {
-        var roleName = role.ToString();
+        var userRoles = await _userManager.GetRolesAsync(user);
+        return userRoles.FirstOrDefault();
+    }
 
-        if (!await _roleManager.RoleExistsAsync(roleName))
-        {
-            throw new Exception($"Role {roleName} does not exist.");
-        }
-
-        //var user2 = await _userManager.FindByNameAsync(user.UserName);
-        //if (user2 == null)
-        //{
-        //    throw new Exception($"Role {roleName} does not exist."); //return NotFound("User not found");
-        //}
+    public async Task AssignRoleToUserAsync(ApplicationUser user, string role)
+    {
+        var roleName = await GetRoleByStringValue(role);
 
         var currentRoles = await _userManager.GetRolesAsync(user);
         if (currentRoles.Count > 0)
@@ -66,41 +61,28 @@ public class RoleService : IRoleService
             await _userManager.RemoveFromRolesAsync(user, currentRoles);
         }
 
-        await _userManager.AddToRoleAsync(user, roleName);
+        await _userManager.AddToRoleAsync(user, roleName.ToString());
     }
 
-    public UserRoles GetRoleByStringValue(string role)
+    public async Task<UserRoles> GetRoleByStringValue(string role)
     {
         var roleDict = new Dictionary<string, UserRoles>
         {
             { "Administrator", UserRoles.Administrator },
             { "AdvancedUser", UserRoles.AdvancedUser },
-            { "SimpleUser", UserRoles.User }
+            { "User", UserRoles.User }
         };
 
-        string[] roleNames = { "Administrator", "AdvancedUser", "SimpleUser" };
-        if (!roleDict.ContainsKey(role))
+        if (!await _roleManager.RoleExistsAsync(role) || !roleDict.ContainsKey(role))
             throw new Exception($"Role {role} does not exist.");
         else
             return roleDict[role];
     }
-
-    //public async Task EnsureRolesExist()
-    //{
-    //    string[] roleNames = { UserRoles.Administrator, UserRoles.AdvancedUser, UserRoles.SimpleUser };
-
-    //    foreach (var roleName in roleNames)
-    //    {
-    //        if (!await _roleManager.RoleExistsAsync(roleName))
-    //        {
-    //            await _roleManager.CreateAsync(new ApplicationRole { Name = roleName });
-    //        }
-    //    }
-    //}
 }
 
 public class DataSeeder
 {
+    //public async Task EnsureRolesExist()
     public static async Task SeedRolesAsync(RoleManager<ApplicationRole> roleManager)
     {
         string[] roleNames = { "Administrator", "AdvancedUser", "User" };

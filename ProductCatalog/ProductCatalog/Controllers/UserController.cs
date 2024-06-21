@@ -5,7 +5,6 @@ using ProductCatalog.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-
 namespace ProductCatalog.Controllers
 {
     [Route("api/[controller]")]
@@ -14,54 +13,11 @@ namespace ProductCatalog.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserService _userService;
-        private readonly IAuthService _authService;
-        private readonly IRoleService _roleService;
 
-        public UserController(UserManager<ApplicationUser> userManager,  IUserService userService, IAuthService authService, IRoleService roleService)
+        public UserController(UserManager<ApplicationUser> userManager,  IUserService userService)
         {
             _userManager = userManager;
             _userService = userService;
-            _authService = authService;
-            _roleService = roleService;
-        }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(UserModelDto model)// RegisterModel model)
-        {
-
-            var user = new ApplicationUser
-            {
-                UserName = model.Email,
-                Email = model.Email,
-            };
-
-            //var result = await _userService.RegisterUserAsync(user, model.Password);
-            var result = await _userManager.CreateAsync(user, model.Password);
-            //var result = await _userService.RegisterUserAsync(model);
-
-
-            //var user2 = await _userManager.FindByNameAsync(model.Username);
-            await _roleService.AssignRoleToUserAsync(user, UserRoles.Administrator);
-            //await _userManager.AddToRoleAsync(user, model.Role);
-            if (!result.Succeeded)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return Ok();
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginModel model)
-        {
-            var result = await _authService.LoginUserAsync(model);
-
-            if (!result.Succeeded)
-            {
-                return Unauthorized();
-            }
-
-            return Ok(new { Token = result.Token });
         }
 
         [HttpGet]
@@ -70,6 +26,14 @@ namespace ProductCatalog.Controllers
         {
             var users = await _userService.GetAllUsersAsync();
             return Ok(users);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<UserModelDto>>> GetLoggedInUser(string id)
+        {
+            //var users = await _userService.GetAllUsersAsync();
+            var user = await _userService.GetUserByIdAsync(id);
+            return Ok(user);
         }
 
         [Authorize(Roles = "Administrator")]
@@ -100,8 +64,21 @@ namespace ProductCatalog.Controllers
             return Ok();
         }
 
+
+        //[HttpPost("{id}/toggleLock")]
+        //public async Task<IActionResult> ToggleUserLock(string id, [FromBody] ToggleLockDto toggleLockDto)
+        //{
+        //    var result = await _userService.ToggleUserLockAsync(id, toggleLockDto.IsLocked);
+        //    if (result.Succeeded)
+        //    {
+        //        return NoContent();
+        //    }
+
+        //    return BadRequest(result.Errors);
+        //}
+
         [Authorize(Roles = "Administrator")]
-        [HttpPut("block/{id}")]
+        [HttpPost("block/{id}")]
         public async Task<IActionResult> BlockUser(string id)
         {
             var result = await _userService.BlockUserAsync(id);
@@ -115,7 +92,7 @@ namespace ProductCatalog.Controllers
         }
 
         [Authorize(Roles = "Administrator")]
-        [HttpPut("unblock/{id}")]
+        [HttpPost("unblock/{id}")]
         public async Task<IActionResult> UnblockUser(string id)
         {
             var result = await _userService.UnblockUserAsync(id);

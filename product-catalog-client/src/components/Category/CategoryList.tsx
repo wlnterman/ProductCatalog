@@ -3,7 +3,7 @@ import { Table, Button, Modal, Form, Input, message } from 'antd';
 import axios from 'axios';
 //123import { useAuth } from '../authContext';
 import { createCategory, deleteCategory, getCategories, updateCategory } from '../../services/categoryService';
-import { useAuth } from '../authContext2';
+import { useAuth } from '../Context/authContext2';
 
 
 // Определение интерфейса для категории
@@ -17,6 +17,7 @@ const CategoryList: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null); // Типизация редактируемой категории
   const { currentUser } = useAuth();
+  const [form] = Form.useForm();
 
 
   const fetchCategories = async () => {
@@ -32,7 +33,6 @@ const CategoryList: React.FC = () => {
   }, []);
 
   const handleEdit = (category: Category) => {
-    console.log(category)
     setEditingCategory(category);
     setIsModalVisible(true);
   };
@@ -56,6 +56,7 @@ const CategoryList: React.FC = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
     setEditingCategory(null);
+    form.resetFields();
   };
 
   const handleSave = async (values: Category) => {
@@ -72,6 +73,7 @@ const CategoryList: React.FC = () => {
       }
       setIsModalVisible(false);
       setEditingCategory(null);
+      form.resetFields();
     } catch (error) {
       message.error('Failed to save category');
     }
@@ -102,6 +104,7 @@ const CategoryList: React.FC = () => {
         footer={null}
       >
         <Form
+        form={form}
           initialValues={editingCategory || { name: '' }} // Начальные значения для формы
           onFinish={handleSave}
         >

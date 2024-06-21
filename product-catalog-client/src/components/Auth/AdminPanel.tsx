@@ -73,9 +73,9 @@
 // export default AdminPanel;
 
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Select, notification } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, LockOutlined } from '@ant-design/icons';
-import { User, addUser, changePassword, deleteUser, getAllUsers, updateUser } from '../../services/userService';
+import { Table, Button, Modal, Form, Input, Select, notification, Switch } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
+import { User, addUser, changePassword, deleteUser, getAllUsers, toggleUserLock2, toggleUserLock3, updateUser } from '../../services/userService';
 
 
 const { Option } = Select;
@@ -153,6 +153,13 @@ const AdminPanel: React.FC = () => {
     form.resetFields();
   };
 
+  const handleToggleLock = async (userId: string, isLocked: boolean) => {
+    isLocked ? await toggleUserLock3(userId) : await toggleUserLock2(userId);
+    //await toggleUserLock(userId, !isLocked);
+    notification.success({ message:`User ${isLocked ? 'unlocked' : 'locked'} successfully`});
+    fetchUsers();
+  };
+
   const handlePasswordSave = async () => {
     try {
       const values = await passwordForm.validateFields();
@@ -174,14 +181,24 @@ const AdminPanel: React.FC = () => {
 
   const columns = [
     {
-      title: 'Username',
-      dataIndex: 'username',
+      title: 'User Name',
+      dataIndex: 'userName',
       key: 'username',
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
+    },
+    {
+      title: 'First Name',
+      dataIndex: 'firstName',
+      key: 'firstName',
+    },
+    {
+      title: 'Last Name',
+      dataIndex: 'lastName',
+      key: 'lastName',
     },
     {
       title: 'Role',
@@ -193,17 +210,16 @@ const AdminPanel: React.FC = () => {
       key: 'actions',
       render: (text: string, record: any) => (
         <>
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => handleEdit(record)}
+          <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} style={{ marginRight: 8 }}>Edit User</Button>
+          <Button icon={<LockOutlined />} onClick={() => handleChangePassword(record)} style={{ marginRight: 8 }}>Change password</Button>
+          <Button icon={<DeleteOutlined />} type="primary" onClick={() => handleDelete(record)} style={{ marginRight: 8 }} danger>Delete</Button>
+          <Switch
+            checked={record.isLocked}
+            onChange={() => handleToggleLock(record.id, record.isLocked)}
+            checkedChildren="Unlock"
+            unCheckedChildren="Lock"
             style={{ marginRight: 8 }}
           />
-          <Button
-            icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record)}
-            style={{ marginRight: 8 }}
-          />
-           <Button icon={<LockOutlined />} onClick={() => handleChangePassword(record)} />
         </>
       ),
     },
@@ -229,7 +245,7 @@ const AdminPanel: React.FC = () => {
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            name="username"
+            name="userName"
             label="Username"
             rules={[{ required: true, message: 'Please input the username!' }]}
           >
@@ -241,6 +257,20 @@ const AdminPanel: React.FC = () => {
             rules={[{ required: true, message: 'Please input the email!' }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            name="firstName"
+            label="First Name"
+            rules={[{ required: true, message: 'Please input your first name!' }]}
+          >
+            <Input prefix={<UserOutlined />} placeholder="First Name" />
+          </Form.Item>
+          <Form.Item
+            name="lastName"
+            label="Last Name"
+            rules={[{ required: true, message: 'Please input your last name!' }]}
+          >
+            <Input prefix={<UserOutlined />} placeholder="Last Name" />
           </Form.Item>
           <Form.Item
             name="role"

@@ -49,3 +49,12 @@ export interface Product {
     generalNote: string;
     specialNote: string;
 }
+
+export interface User {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+    isLocked: boolean;
+  }

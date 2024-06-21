@@ -8,6 +8,7 @@ export interface User {
   email: string;
   role: string;
   password?: string;
+  isLocked: boolean;
 }
 
 
@@ -85,3 +86,40 @@ export const changePassword = async (id: string, currentPassword : string, newPa
   const response = await axios.put(`${API_URL}/change-password/${id}`, { currentPassword, newPassword }, { headers });
   return response.data;
 };
+
+export const getUserProfile = async (userId: string) => {
+  const token = localStorage.getItem('token');
+  const headers = {
+    Authorization: `Bearer ${token}`
+  };
+  const response = await axios.get(`${API_URL}/${userId}`, { headers });
+  return response.data;
+};
+
+export const updateUserProfile = async (userId: string, userData: any) => {
+  const response = await axios.put(`${API_URL}/${userId}`, userData);
+  return response.data;
+};
+
+export const toggleUserLock2 = async (userId: string): Promise<void> => {
+  const token = localStorage.getItem('token');
+  const headers = {
+    Authorization: `Bearer ${token}`
+  };
+  await axios.post(`${API_URL}/block/${userId}`, userId, { headers });
+};
+export const toggleUserLock3 = async (userId: string): Promise<void> => {
+  const token = localStorage.getItem('token');
+  const headers = {
+    Authorization: `Bearer ${token}`
+  };
+  await axios.post(`${API_URL}/unblock/${userId}`, userId, { headers });
+};
+
+// export const toggleUserLock = async (userId: string, isLocked: boolean): Promise<void> => {
+//   await axios.post(`${API_URL}/${userId}/toggleLock`, { isLocked });
+// };
+
+// export const updateUser = async (userId: string, user: User): Promise<void> => {
+//   await axios.put(`${API_URL}/${userId}`, user);
+// };

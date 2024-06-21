@@ -19,6 +19,9 @@ export const updateCategory = async (id: string, category: CreateCategoryFormVal
   const headers = {
       Authorization: `Bearer ${token}`
   };
+  console.log("777777777777777");
+              console.log(token);
+              console.log(headers);
   await axios.put(`${API_URL}/${id}`, category, { headers });// axios.delete(`${API_URL}/${id}`, { headers });
 };
 

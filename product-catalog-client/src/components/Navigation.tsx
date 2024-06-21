@@ -1,21 +1,17 @@
 import { Button, Col, Divider, Row, Space } from 'antd';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getCurrentUserToken, logout } from '../services/authService';
-import { useAuth } from './authContext2';
+import { useAuth } from './Context/authContext2';
 import { UserRoles } from '../types';
 //123import { useAuth } from './authContext';
 
 
 const Navigation: React.FC = () => {
   const navigate = useNavigate ();
-  const { currentUser, setCurrentUser } = useAuth();
-  console.log(currentUser)
-  console.log(getCurrentUserToken())
+  const { currentUser, setCurrentUser, logoutUser } = useAuth();
 
   const handleLogout = () => {
-    logout();
-    setCurrentUser(null);
+    logoutUser();
     navigate('/products');
   };
 
@@ -34,6 +30,7 @@ const Navigation: React.FC = () => {
                 {/* <Link to="/assign-role"><Button type="link">Assign Role</Button></Link> */}
                 {currentUser && currentUser.role === UserRoles.Administrator && <Link to="/admin"><Button type="link">Admin</Button></Link>}
                 {/* <Link to="/product/edit/:id"><Button type="link">product/edit/:id</Button></Link> */}
+                <Link to="/user-profile"><Button type="link">{`${currentUser.FirstName} ${currentUser.LastName}`}</Button></Link>
                 <Button type="link" onClick={handleLogout}>Logout</Button>
               </>
             )}

@@ -1,38 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import { getAllProducts } from '../../services/productService';
-
-// const ProductList: React.FC = () => {
-//   const [products, setProducts] = useState<any[]>([]);
-
-//   useEffect(() => {
-//     const fetchProducts = async () => {
-//       const data = await getAllProducts();
-//       setProducts(data);
-//     };
-
-//     fetchProducts();
-//   }, []);
-
-//   return (
-//     <div>
-//       <h2>Product List</h2>
-//       <Link to="/products/add">Add Product</Link>
-//       <ul>
-//         {products.map(product => (
-//           <li key={product.id}>
-//             {product.name} - {product.price}
-//             <Link to={`/products/edit/${product.id}`}>Edit</Link>
-//             {/* btn delete item */}
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// };
-
-// export default ProductList;
-
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input, InputNumber, Select, notification, Tag } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, DollarOutlined } from '@ant-design/icons';
@@ -40,12 +5,12 @@ import { getAllProducts, addProduct, updateProduct, deleteProduct, getUsdExchang
 import { number } from 'yup';
 import { getCategories } from '../../services/categoryService';
 //123import { useAuth } from '../authContext';
-import { UserRoles } from '../../types';
-import { useAuth } from '../authContext2';
-
+import { Product, UserRoles } from '../../types';
+import { useAuth } from '../Context/authContext2';
 
 
 const { Option } = Select;
+const { Search } = Input;
 
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState([]);
@@ -53,6 +18,7 @@ const ProductList: React.FC = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [usdExchangeRate, setUsdExchangeRate] = useState(0);
+
   const { currentUser } = useAuth();
 
   const [form] = Form.useForm();
@@ -86,7 +52,9 @@ const ProductList: React.FC = () => {
 
   const handleAdd = () => {
     setEditingProduct(null);
+    
     setIsModalVisible(true);
+    form.resetFields();
   };
 
   const handleEdit = (product: any) => {
@@ -132,9 +100,7 @@ const ProductList: React.FC = () => {
     setIsModalVisible(false);
     form.resetFields();
   };
-  console.log(currentUser)
-  console.log(currentUser?.role)
-  console.log(currentUser && currentUser.role !== UserRoles.User)
+  
   const columns = [
     {
       title: 'Name',
@@ -155,7 +121,7 @@ const ProductList: React.FC = () => {
       title: 'Price (BYN)',
       dataIndex: 'price',
       key: 'price',
-      render: (price: any) => (
+      render: (price: number) => (
         <>
           {price}
           <DollarOutlined
@@ -209,6 +175,7 @@ const ProductList: React.FC = () => {
       >
         Add Product
       </Button>
+
       <Table columns={columns} dataSource={products} rowKey="id" />
 
       <Modal

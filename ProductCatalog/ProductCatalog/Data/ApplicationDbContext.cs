@@ -11,6 +11,7 @@ namespace ProductCatalog.Data
         {
         }
 
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

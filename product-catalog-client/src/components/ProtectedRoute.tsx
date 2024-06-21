@@ -13,19 +13,31 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { getCurrentUserToken } from '../services/authService';
+import { getCurrentUserDecodedToken } from '../services/authService';
 //123import { useAuth } from './authContext';
 import { UserRoles } from '../types';
-import { useAuth } from './authContext2';
+import { useAuth } from './Context/authContext2';
 
 const ProtectedRoute = ({ children, roles }: { children: React.ReactNode, roles : UserRoles[] }) => {
-  const user = getCurrentUserToken();
-  const { currentUser } = useAuth();
+  const token = getCurrentUserDecodedToken();
+  const { currentUser, isLoading, isTokenExpired, logoutUser } = useAuth();
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Или ваш компонент загрузки
+  }
+
+  //logout on token expire
+  if (token) {
+    if (isTokenExpired(token)) {
+      logoutUser();
+      return <Navigate to="/login" />;
+    }
+  }
 
   if (!currentUser) return <Navigate to="/login" replace />;
-  console.log("-------------")
-  console.log(currentUser["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])
-  if (roles && roles.indexOf(currentUser["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]) === -1) {
+
+  
+  if (roles && roles.indexOf(currentUser.role) === -1) {
     return <Navigate to="/unauthorized" />;
   }
   
