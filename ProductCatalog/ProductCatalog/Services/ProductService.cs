@@ -5,10 +5,11 @@ using ProductCatalog.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using ProductCatalog.Repository;
 
 public interface IProductService
 {
-    Task<IEnumerable<ProductDto>> GetProductsAsync();
+    Task<PaginatedList<ProductDto>> GetProductsAsync(int page, int pageSize, string searchTerm);
     Task<Product> GetProductByIdAsync(int id);
     Task CreateProductAsync(CreateProductModel product);
     Task UpdateProductAsync(Product product);
@@ -18,30 +19,38 @@ public interface IProductService
 public class ProductService : IProductService
 {
     private readonly ApplicationDbContext _context;
+    private readonly IProductRepository _productRepository;
 
-    public ProductService(ApplicationDbContext context)
+    public ProductService(ApplicationDbContext context, IProductRepository productRepository)   
     {
+        
         _context = context;
+        _productRepository = productRepository;
     }
 
-    public async Task<IEnumerable<ProductDto>> GetProductsAsync()
+    public async Task<PaginatedList<ProductDto>> GetProductsAsync(int page, int pageSize, string searchTerm)
     {
-        var products = await _context.Products
-           .Include(p => p.Category)
-           .Select(p => new ProductDto
-           {
-               Id = p.Id,
-               Name = p.Name,
-               Description = p.Description,
-               Price = p.Price,
-               CategoryId = p.CategoryId,
-               CategoryName = p.Category.Name,
-               GeneralNote = p.GeneralNote,
-               SpecialNote = p.SpecialNote
-           })
-           .ToListAsync();
+        return await _productRepository.GetAllProductsAsync(page, pageSize, searchTerm);
+        //var products = await _context.Products
+        //   .Include(p => p.Category)
+        //   .Select(p => new ProductDto
+        //   {
+        //       Id = p.Id,
+        //       Name = p.Name,
+        //       Description = p.Description,
+        //       Price = p.Price,
+        //       CategoryId = p.CategoryId,
+        //       CategoryName = p.Category.Name,
+        //       GeneralNote = p.GeneralNote,
+        //       SpecialNote = p.SpecialNote
+        //   })
+        //   .ToListAsync();
 
-        return products;
+        //return products;
+
+
+
+
         //return await _context.Products.Include(p => p.Category).ToListAsync();
         //return await _context.Products.ToListAsync();
     }

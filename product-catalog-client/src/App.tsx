@@ -9,11 +9,12 @@ import AdminPanel from './components/Auth/AdminPanel';
 import CreateProduct from './components/Product/CreateProduct';
 import CreateCategory from './components/Category/CreateCategory';
 import CategoryList from './components/Category/CategoryList';
-import Navigation from './components/Navigation';
+import Navigation from './components/Generic/Navigation';
 //123import { AuthProvider } from './components/authContext';
 import { UserRoles } from './types';
 import { AuthProvider, useAuth } from './components/Context/authContext2';
-import UserProfile from './components/UserProfile';
+import UserProfile from './components/User/UserProfile';
+import ProductList2 from './components/Product/ProductList2';
 
 
 const App: React.FC = () => {
@@ -34,7 +35,8 @@ const App: React.FC = () => {
                     </Route> */}
                      <Route path="/user-profile" element={<UserProfile />} />
           <Route path="/" element={<ProtectedRoute roles={[UserRoles.Administrator, UserRoles.AdvancedUser, UserRoles.User]} ><Home /></ProtectedRoute>}/> 
-          <Route path="/products" element={<ProtectedRoute roles={[UserRoles.Administrator, UserRoles.AdvancedUser, UserRoles.User]} ><ProductList /></ProtectedRoute>}/> 
+          <Route path="/products" element={<ProtectedRoute roles={[UserRoles.Administrator, UserRoles.AdvancedUser, UserRoles.User]} ><ProductList /></ProtectedRoute>}/>
+          <Route path="/products2" element={<ProtectedRoute roles={[UserRoles.Administrator, UserRoles.AdvancedUser, UserRoles.User]} ><ProductList2 /></ProtectedRoute>}/> 
           <Route path="/add-product" element={<ProtectedRoute  roles={[UserRoles.Administrator, UserRoles.AdvancedUser]}><CreateProduct /></ProtectedRoute>}/>
           <Route path="/product/edit/:id" element={<ProtectedRoute roles={[UserRoles.Administrator]}><CreateProduct /></ProtectedRoute>}/> 
           <Route path="/categories" element={<ProtectedRoute roles={[UserRoles.Administrator, UserRoles.AdvancedUser, UserRoles.User]}><CategoryList /></ProtectedRoute>}/> 

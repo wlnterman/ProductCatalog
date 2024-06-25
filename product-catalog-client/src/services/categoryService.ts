@@ -25,6 +25,26 @@ export const updateCategory = async (id: string, category: CreateCategoryFormVal
   await axios.put(`${API_URL}/${id}`, category, { headers });// axios.delete(`${API_URL}/${id}`, { headers });
 };
 
+export const getPagedCategories = async (params: { page: number; pageSize: number, searchTerm?: string }) => {
+  const token = localStorage.getItem('token'); 
+  const headers = {
+    Authorization: `Bearer ${token}`
+  };
+  const response = await axios.get(`${API_URL}/paged`, {
+    headers,
+    params: {
+      page: params.page,
+      pageSize: params.pageSize,
+      searchTerm: params.searchTerm,
+    }
+  });
+  return response.data;
+};
+
+// export const getPagedCategories = async (page: number, pageSize: number) => {
+//   const response = await axios.get(`/api/categories/paged?pageNumber=${page}&pageSize=${pageSize}`);
+//   return response.data;
+// };
 
 export const getCategories = async () => {
   const token = localStorage.getItem('token'); 

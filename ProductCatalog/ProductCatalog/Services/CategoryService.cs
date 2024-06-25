@@ -4,10 +4,12 @@ using ProductCatalog.Data;
 using ProductCatalog.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 public interface ICategoryService
 {
     Task<IEnumerable<Category>> GetCategoriesAsync();
+    Task<PaginatedList<Category>> GetPagedCategoriesAsync(int pageNumber, int pageSize, string searchTerm);
     Task<Category> GetCategoryByIdAsync(int id);
     Task CreateCategoryAsync(Category category);
     Task UpdateCategoryAsync(Category category);
@@ -28,6 +30,23 @@ public class CategoryService : ICategoryService
     {
         _logger.LogInformation("Fetching all categories from database");
         return await _context.Categories.ToListAsync();
+    }
+
+    public async Task<PaginatedList<Category>> GetPagedCategoriesAsync(int pageNumber, int pageSize, string searchTerm)
+    {
+        var query = _context.Categories.AsQueryable();
+
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            query = query.Where(c => c.Name.Contains(searchTerm));
+        }
+
+        var totalItems = await query.CountAsync();
+        var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        
+        //return new PaginatedList<ProductDto>(products, totalItems, page, pageSize);
+        return new PaginatedList<Category>(items, totalItems, pageNumber, pageSize);
+
     }
 
     public async Task<Category> GetCategoryByIdAsync(int id)

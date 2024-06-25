@@ -19,9 +19,9 @@ namespace ProductCatalog.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string searchTerm = null)
         {
-            return Ok(await _productService.GetProductsAsync());
+            return Ok(await _productService.GetProductsAsync(page, pageSize, searchTerm));
         }
 
         [HttpGet("{id}")]
