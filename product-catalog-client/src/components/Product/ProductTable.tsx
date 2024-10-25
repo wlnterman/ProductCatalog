@@ -61,6 +61,13 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, categories, usdEx
       ),
     },
     {
+      title: 'Price (USD)',
+      dataIndex: 'price',
+      key: 'price',
+      sorter: (a: Product, b: Product) => a.price - b.price,
+      render: (price: number) => ((price / usdExchangeRate).toFixed(2) + " USD"),
+    },
+    {
         title: 'GeneralNote',
         dataIndex: 'generalNote',
         key: 'generalNote',

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Form, TablePaginationConfig, notification } from 'antd';
+import React, { useState, useEffect } from "react";
+import { Button, Form, TablePaginationConfig, notification } from "antd";
 
-import ProductTable from './ProductTable';
-import ProductModal from './ProductModal';
-import { getAllProducts, addProduct, updateProduct, deleteProduct, getUsdExchangeRate } from '../../services/productService';
-import { getCategories } from '../../services/categoryService';
-import { PlusOutlined } from '@ant-design/icons';
-import SearchBar from '../Generic/SearchBar';
+import ProductTable from "./ProductTable";
+import ProductModal from "./ProductModal";
+import { getAllProducts, addProduct, updateProduct, deleteProduct, getUsdExchangeRate } from "../../services/productService";
+import { getCategories } from "../../services/categoryService";
+import { PlusOutlined } from "@ant-design/icons";
+import SearchBar from "../Generic/SearchBar";
 
 const ProductList2: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
@@ -14,14 +14,13 @@ const ProductList2: React.FC = () => {
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [usdExchangeRate, setUsdExchangeRate] = useState(0);
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
     pageSize: 10,
     total: 0,
   });
-
 
   const [form] = Form.useForm();
 
@@ -36,10 +35,7 @@ const ProductList2: React.FC = () => {
   }, [products, searchText]);
 
   const fetchProducts = async () => {
-    const products = await getAllProducts( { page: 1, pageSize: 10, searchTerm: "" });
-    console.log("products.items")
-    console.log(products)
-    console.log(products.items)
+    const products = await getAllProducts({ page: 1, pageSize: 10, searchTerm: "" });
     setProducts(products.items);
     setFilteredProducts(products.items);
   };
@@ -69,7 +65,7 @@ const ProductList2: React.FC = () => {
 
   const handleDelete = async (productId: string) => {
     await deleteProduct(productId);
-    notification.success({ message: 'Product deleted successfully' });
+    notification.success({ message: "Product deleted successfully" });
     fetchProducts();
   };
 
@@ -78,16 +74,16 @@ const ProductList2: React.FC = () => {
       const values = await form.validateFields();
       if (editingProduct) {
         await updateProduct(editingProduct.id, values);
-        notification.success({ message: 'Product updated successfully' });
+        notification.success({ message: "Product updated successfully" });
       } else {
         await addProduct(values);
-        notification.success({ message: 'Product added successfully' });
+        notification.success({ message: "Product added successfully" });
       }
       fetchProducts();
       setIsModalVisible(false);
       form.resetFields();
     } catch (error) {
-      console.log('Validation failed:', error);
+      console.log("Validation failed:", error);
     }
   };
 
@@ -98,21 +94,13 @@ const ProductList2: React.FC = () => {
 
   const handleSearch = (value: string) => {
     setSearchText(value);
-    const filtered = products.filter((product) =>
-      product.name.toLowerCase().includes(value.toLowerCase())
-    );
+    const filtered = products.filter((product) => product.name.toLowerCase().includes(value.toLowerCase()));
     setFilteredProducts(filtered);
   };
 
   return (
     <div>
-      <SearchBar onSearch={handleSearch} />
-      <Button
-        type="primary"
-        icon={<PlusOutlined />}
-        onClick={handleAdd}
-        style={{ marginBottom: 16 }}
-      >
+      <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd} style={{ marginBottom: 16 }}>
         Add Product
       </Button>
       <ProductTable

@@ -28,6 +28,15 @@ namespace ProductCatalog.Controllers
             return Ok(users);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        [Route("paged")]
+        public async Task<IActionResult> GetPagedUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string searchTerm = null)
+        {
+            var pagedUsers = await _userService.GetPagedUsersAsync(page, pageSize, searchTerm);
+            return Ok(pagedUsers);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<UserModelDto>>> GetLoggedInUser(string id)
         {

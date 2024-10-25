@@ -1,5 +1,5 @@
-import React from 'react';
-import { Modal, Form, Input, InputNumber, Select } from 'antd';
+import React from "react";
+import { Modal, Form, Input, InputNumber, Select } from "antd";
 
 const { Option } = Select;
 
@@ -17,10 +17,17 @@ interface ProductModalProps {
   editingProduct: any;
 }
 
-const ProductModal: React.FC<ProductModalProps> = ({ visible, onOk, onCancel, form, categories, editingProduct }) => {
+const ProductModal: React.FC<ProductModalProps> = ({
+  visible,
+  onOk,
+  onCancel,
+  form,
+  categories,
+  editingProduct,
+}) => {
   return (
     <Modal
-      title={editingProduct ? 'Edit Product' : 'Add Product'}
+      title={editingProduct ? "Edit Product" : "Add Product"}
       visible={visible}
       onOk={onOk}
       onCancel={onCancel}
@@ -29,14 +36,16 @@ const ProductModal: React.FC<ProductModalProps> = ({ visible, onOk, onCancel, fo
         <Form.Item
           name="name"
           label="Name"
-          rules={[{ required: true, message: 'Please input the product name!' }]}
+          rules={[
+            { required: true, message: "Please input the product name!" },
+          ]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           name="categoryid"
           label="Category"
-          rules={[{ required: true, message: 'Please select a category!' }]}
+          rules={[{ required: true, message: "Please select a category!" }]}
         >
           <Select>
             {categories.map((category) => (
@@ -49,16 +58,32 @@ const ProductModal: React.FC<ProductModalProps> = ({ visible, onOk, onCancel, fo
         <Form.Item
           name="description"
           label="Description"
-          rules={[{ required: true, message: 'Please input the product description!' }]}
+          //rules={[{ required: true, message: 'Please input the product description!' }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           name="price"
           label="Price (BYN)"
-          rules={[{ required: true, message: 'Please input the product price!' }]}
+          rules={[
+            { required: true, message: "Please input the product price!" },
+          ]}
         >
           <InputNumber min={0} />
+        </Form.Item>
+        <Form.Item
+          name="generalNote"
+          label="GeneralNote"
+          //rules={[{ required: true, message: 'Please input the product generalNote!' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="specialNote"
+          label="SpecialNote"
+          //rules={[{ required: true, message: 'Please input the product specialNote!' }]}
+        >
+          <Input />
         </Form.Item>
       </Form>
     </Modal>

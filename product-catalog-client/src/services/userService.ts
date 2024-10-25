@@ -13,19 +13,36 @@ export interface User {
 
 
 export const getAllUsers = async () => {
-    const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
+  const headers = {
+      Authorization: `Bearer ${token}`
+  };
+
+
+  try {
+    const response = await axios.get(API_URL, { headers });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error;
+  }
+};
+
+  export const getPagedUSers = async (params: { page: number; pageSize: number, searchTerm?: string }) => {
+    const token = localStorage.getItem('token'); 
     const headers = {
-        Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`
     };
 
-
-    try {
-      const response = await axios.get(API_URL, { headers });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      throw error;
-    }
+    const response = await axios.get(`${API_URL}/paged`, {
+      headers,
+      params: {
+        page: params.page,
+        pageSize: params.pageSize,
+        searchTerm: params.searchTerm,
+      }
+    });
+    return response.data;
   };
 // export const getAllUsers = async (): Promise<User[]> => {
 //   try {
