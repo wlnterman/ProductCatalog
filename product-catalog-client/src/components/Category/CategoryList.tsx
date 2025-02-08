@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input, message } from 'antd';
 import axios from 'axios';
 //123import { useAuth } from '../authContext';
-import { createCategory, deleteCategory, getCategories, updateCategory } from '../../services/categoryService';
+import { createCategory, deleteCategory, getCategories, getPagedCategories, updateCategory } from '../../services/categoryService';
 import { useAuth } from '../Context/authContext2';
+import { ColumnsType } from 'antd/es/table';
+import { title } from 'process';
+import PaginatedTable from '../Generic/PaginatedTable';
 
 
 // Определение интерфейса для категории
@@ -79,11 +82,30 @@ const CategoryList: React.FC = () => {
     }
   };
 
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (record: Category) => (
+        <>
+          <Button onClick={() => handleEdit(record)} style={{ marginRight: 8 }}>Edit</Button>
+          <Button danger onClick={() => handleDelete(record.id)}>Delete</Button>
+        </>
+      )
+    },
+  ];
+
   return (
     <>
       <Button type="primary" onClick={() => setIsModalVisible(true)}>
         Add Category
       </Button>
+      <PaginatedTable columns={columns} fetchData={getPagedCategories} />
       <Table dataSource={categories} rowKey="id" style={{ marginTop: 20 }}>
         <Table.Column title="Name" dataIndex="name" key="name" />
         <Table.Column

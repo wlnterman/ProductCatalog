@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, Select, notification, Tag } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, Select, notification, Tag, TablePaginationConfig } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, DollarOutlined } from '@ant-design/icons';
 import { getAllProducts, addProduct, updateProduct, deleteProduct, getUsdExchangeRate } from '../../services/productService';
 import { number } from 'yup';
@@ -7,6 +7,7 @@ import { getCategories } from '../../services/categoryService';
 //123import { useAuth } from '../authContext';
 import { Product, UserRoles } from '../../types';
 import { useAuth } from '../Context/authContext2';
+import PaginatedTable from '../Generic/PaginatedTable';
 
 
 const { Option } = Select;
@@ -18,19 +19,48 @@ const ProductList: React.FC = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [usdExchangeRate, setUsdExchangeRate] = useState(0);
+  //const [pagination, setPagination] = useState<TablePaginationConfig>({ current: 1, pageSize: 10 });
+  const [pagination, setPagination] = useState<TablePaginationConfig>({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
 
   const { currentUser } = useAuth();
 
   const [form] = Form.useForm();
 
   useEffect(() => {
-    fetchProducts();
+    fetchProducts({
+      pagination,
+    });
     fetchUsdExchangeRate();
     fetchCategories();
-  }, []);
+  }, [pagination]);
 
-  const fetchProducts = async () => {
-    const products = await getAllProducts();
+  const handleTableChange = (newPagination: TablePaginationConfig) => {
+    fetchProducts({
+      pagination: newPagination,
+    });
+    //setPagination(pagination);
+  };
+
+  const fetchProducts = async (params: any = {}) => {
+    //const products = await getAllProducts(pagination.current, pagination.pageSize);
+
+
+    // if (Array.isArray(products.items)) {
+    //   setProducts(products.items);
+    //   console.log("999999999999999999999999999")
+    //   console.log(products)
+    //   setPagination({
+    //     ...params.pagination,
+    //     total: products.totalItems,
+    //   });
+    // } else {
+    //   console.error('Data is not an array:', products);
+    // }
+
     setProducts(products);
     console.log(products)
   };
@@ -175,8 +205,16 @@ const ProductList: React.FC = () => {
       >
         Add Product
       </Button>
-
-      <Table columns={columns} dataSource={products} rowKey="id" />
+      <PaginatedTable 
+        columns={columns} 
+        fetchData={getAllProducts} />
+      <Table 
+        columns={columns} 
+        dataSource={products} 
+        pagination={{ pageSize: 10 }}
+        //pagination={pagination} 
+        onChange={handleTableChange }  
+        rowKey="id" />
 
       <Modal
         title={editingProduct ? 'Edit Product' : 'Add Product'}
@@ -208,7 +246,7 @@ const ProductList: React.FC = () => {
           <Form.Item
             name="description"
             label="Description"
-            rules={[{ required: true, message: 'Please input the product description!' }]}
+            //rules={[{ required: true, message: 'Please input the product description!' }]}
           >
             <Input />
           </Form.Item>
@@ -222,14 +260,14 @@ const ProductList: React.FC = () => {
           <Form.Item
             name="generalNote"
             label="GeneralNote"
-            rules={[{ required: true, message: 'Please input the product generalNote!' }]}
+            //rules={[{ required: true, message: 'Please input the product generalNote!' }]}
           >
             <Input />
           </Form.Item>
             <Form.Item
             name="specialNote"
             label="SpecialNote"
-            rules={[{ required: true, message: 'Please input the product specialNote!' }]}
+            //rules={[{ required: true, message: 'Please input the product specialNote!' }]}
           >
             <Input />
           </Form.Item>
