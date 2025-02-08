@@ -49,6 +49,14 @@ namespace ProductCatalog.Repository
         Task DeleteRoleAsync(string id);
     }
 
+    public interface IPaymentRepository
+    {
+        Task<IEnumerable<Payment>> GetPaymentsByObjectIdAsync(int objectId);
+        Task AddPaymentAsync(Payment payment);
+        Task UpdatePaymentAsync(Payment payment);
+        Task DeletePaymentAsync(int paymentId);
+    }
+
     //interface IRepository<T> : IDisposable
     //    where T : class
     //{

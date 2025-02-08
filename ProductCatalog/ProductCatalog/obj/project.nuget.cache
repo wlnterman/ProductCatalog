@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "E6x+jV00/jJhjQC+JxEABic5GnnEG6j/+d41723A9Tc0x/gttceDDuHTsqgiVt6sXZ6pgtajkUOh9nDsmWsLkw==",
+  "dgSpecHash": "1vvCZAlm/Tnaet1I5pp5yVf+C1l/7Ucjd6mx9kQASmlRkEBxZgxlDNEsw+nfvD8XS12oU5zOuBkqfZhA2ozVUg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\vlll\\Desktop\\Finding Job\\TestTasks\\Belarusbank\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj",
+  "projectFilePath": "C:\\Users\\vlll\\Desktop\\Finding Job\\TestTasks\\Belarusbank\\Belarusbank\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\vlll\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.23\\microsoft.aspnetcore.authentication.jwtbearer.3.1.23.nupkg.sha512",
     "C:\\Users\\vlll\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.23\\microsoft.aspnetcore.cryptography.internal.3.1.23.nupkg.sha512",
