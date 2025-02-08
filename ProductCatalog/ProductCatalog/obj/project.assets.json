@@ -5729,19 +5729,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\vlll\\.nuget\\packages\\": {}
+    "C:\\Users\\vlll\\.nuget\\packages\\": {},
+    "C:\\Program Files\\DevExpress 24.1\\Components\\Offline Packages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\vlll\\Desktop\\Finding Job\\TestTasks\\Belarusbank\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj",
+      "projectUniqueName": "C:\\Users\\vlll\\Desktop\\Finding Job\\TestTasks\\Belarusbank\\Belarusbank\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj",
       "projectName": "ProductCatalog",
-      "projectPath": "C:\\Users\\vlll\\Desktop\\Finding Job\\TestTasks\\Belarusbank\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj",
+      "projectPath": "C:\\Users\\vlll\\Desktop\\Finding Job\\TestTasks\\Belarusbank\\Belarusbank\\ProductCatalog\\ProductCatalog\\ProductCatalog.csproj",
       "packagesPath": "C:\\Users\\vlll\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\vlll\\Desktop\\Finding Job\\TestTasks\\Belarusbank\\ProductCatalog\\ProductCatalog\\obj\\",
+      "outputPath": "C:\\Users\\vlll\\Desktop\\Finding Job\\TestTasks\\Belarusbank\\Belarusbank\\ProductCatalog\\ProductCatalog\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\DevExpress 24.1\\Components\\Offline Packages"
+      ],
       "configFilePaths": [
         "C:\\Users\\vlll\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 24.1.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -5749,6 +5754,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\DevExpress 24.1\\Components\\System\\Components\\Packages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
