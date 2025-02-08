@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using ProductCatalog.Repository;
+using ProductCatalog.Extensions;
 
 public interface IUserService
 {
@@ -16,6 +17,7 @@ public interface IUserService
     Task<IdentityResult> DeleteUserAsync(string userId);
     Task<IdentityResult> ChangePasswordAsync(string userId, ChangePasswordModel model);
     Task<IEnumerable<UserModelDto>> GetAllUsersAsync();
+    Task<PaginatedList<UserModelDto>> GetPagedUsersAsync(int pageNumber, int pageSize, string searchTerm);
     Task<UserModelDto> GetUserByIdAsync(string userId);
 }
 
@@ -55,6 +57,37 @@ public class UserService : IUserService
             }
         return usersDtoList;
         //return await Task.Run(() => _userManager.Users.ToList());
+    }
+    public async Task<PaginatedList<UserModelDto>> GetPagedUsersAsync(int pageNumber, int pageSize, string searchTerm)
+    {
+        //перенести в репозиторий и сделать кюверабл чтобы работало независимо от высоты букв
+        var users = await Task.Run(() => _userRepository.GetAllUsersAsync());
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            users = users.Where(u => 
+                u.Email.ContainsIgnoreCase(searchTerm) || 
+                u.FirstName.ContainsIgnoreCase(searchTerm) || 
+                u.LastName.ContainsIgnoreCase(searchTerm)).ToList();
+        }
+        var totalItems = users.Count();
+        var items = users.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+        var usersDtoList = new List<UserModelDto>();
+        foreach (var user in items)
+        {
+            var roles = await _userRepository.GetRolesAsync(user); //await _userManager.GetRolesAsync(user);
+            usersDtoList.Add(new UserModelDto
+            {
+                ID = user.Id,
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Role = roles.FirstOrDefault(),
+                IsLocked = user.LockoutEnd != null
+            }); ;
+        }
+        return new PaginatedList<UserModelDto>(usersDtoList, totalItems, pageNumber, pageSize);
     }
 
     public async Task<UserModelDto> GetUserByIdAsync(string userId)

@@ -72,11 +72,36 @@
 
 // export default AdminPanel;
 
-import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Select, notification, Switch } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-import { User, addUser, changePassword, deleteUser, getAllUsers, toggleUserLock2, toggleUserLock3, updateUser } from '../../services/userService';
-
+import React, { useState, useEffect } from "react";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Select,
+  notification,
+  Switch,
+} from "antd";
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  LockOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import {
+  User,
+  addUser,
+  changePassword,
+  deleteUser,
+  getAllUsers,
+  getPagedUSers,
+  toggleUserLock2,
+  toggleUserLock3,
+  updateUser,
+} from "../../services/userService";
+import PaginatedTable from "../Generic/PaginatedTable";
 
 const { Option } = Select;
 
@@ -114,10 +139,10 @@ const AdminPanel: React.FC = () => {
 
   const handleDelete = async (user: User) => {
     Modal.confirm({
-      title: 'Are you sure you want to delete user ' + user.email+'?',
+      title: "Are you sure you want to delete user " + user.email + "?",
       onOk: async () => {
         await deleteUser(user.id);
-        notification.success({ message: 'User deleted successfully' });
+        notification.success({ message: "User deleted successfully" });
         fetchUsers();
       },
     });
@@ -135,16 +160,16 @@ const AdminPanel: React.FC = () => {
       if (editingUser) {
         const updatedValues = { ...values, id: editingUser.id };
         await updateUser(editingUser.id, updatedValues);
-        notification.success({ message: 'User updated successfully' });
+        notification.success({ message: "User updated successfully" });
       } else {
         await addUser(values);
-        notification.success({ message: 'User added successfully' });
+        notification.success({ message: "User added successfully" });
       }
       fetchUsers();
       setIsModalVisible(false);
       form.resetFields();
     } catch (error) {
-      notification.error({ message: 'Failed to save user' });
+      notification.error({ message: "Failed to save user" });
     }
   };
 
@@ -156,7 +181,9 @@ const AdminPanel: React.FC = () => {
   const handleToggleLock = async (userId: string, isLocked: boolean) => {
     isLocked ? await toggleUserLock3(userId) : await toggleUserLock2(userId);
     //await toggleUserLock(userId, !isLocked);
-    notification.success({ message:`User ${isLocked ? 'unlocked' : 'locked'} successfully`});
+    notification.success({
+      message: `User ${isLocked ? "unlocked" : "locked"} successfully`,
+    });
     fetchUsers();
   };
 
@@ -164,13 +191,17 @@ const AdminPanel: React.FC = () => {
     try {
       const values = await passwordForm.validateFields();
       if (editingUser) {
-        await changePassword(editingUser.id, values.currentPassword , values.newPassword);
-        notification.success({ message:'Password changed successfully'});
+        await changePassword(
+          editingUser.id,
+          values.currentPassword,
+          values.newPassword
+        );
+        notification.success({ message: "Password changed successfully" });
       }
       setIsPasswordModalVisible(false);
       passwordForm.resetFields();
     } catch (error) {
-      notification.error({ message:'Failed to change password'});
+      notification.error({ message: "Failed to change password" });
     }
   };
 
@@ -181,38 +212,58 @@ const AdminPanel: React.FC = () => {
 
   const columns = [
     {
-      title: 'User Name',
-      dataIndex: 'userName',
-      key: 'username',
+      title: "User Name",
+      dataIndex: "userName",
+      key: "username",
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
-      title: 'First Name',
-      dataIndex: 'firstName',
-      key: 'firstName',
+      title: "First Name",
+      dataIndex: "firstName",
+      key: "firstName",
     },
     {
-      title: 'Last Name',
-      dataIndex: 'lastName',
-      key: 'lastName',
+      title: "Last Name",
+      dataIndex: "lastName",
+      key: "lastName",
     },
     {
-      title: 'Role',
-      dataIndex: 'role',
-      key: 'role',
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
     },
     {
-      title: 'Actions',
-      key: 'actions',
+      title: "Actions",
+      key: "actions",
       render: (text: string, record: any) => (
         <>
-          <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} style={{ marginRight: 8 }}>Edit User</Button>
-          <Button icon={<LockOutlined />} onClick={() => handleChangePassword(record)} style={{ marginRight: 8 }}>Change password</Button>
-          <Button icon={<DeleteOutlined />} type="primary" onClick={() => handleDelete(record)} style={{ marginRight: 8 }} danger>Delete</Button>
+          <Button
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+            style={{ marginRight: 8 }}
+          >
+            Edit User
+          </Button>
+          <Button
+            icon={<LockOutlined />}
+            onClick={() => handleChangePassword(record)}
+            style={{ marginRight: 8 }}
+          >
+            Change password
+          </Button>
+          <Button
+            icon={<DeleteOutlined />}
+            type="primary"
+            onClick={() => handleDelete(record)}
+            style={{ marginRight: 8 }}
+            danger
+          >
+            Delete
+          </Button>
           <Switch
             checked={record.isLocked}
             onChange={() => handleToggleLock(record.id, record.isLocked)}
@@ -235,10 +286,20 @@ const AdminPanel: React.FC = () => {
       >
         Add User
       </Button>
+      {/* //<PaginatedTable columns={columns} fetchData={getPagedCategories} /> */}
+      <PaginatedTable
+        columns={columns}
+        fetchData={getPagedUSers}
+        // data={users}
+        // total={totalUsers}
+        // currentPage={currentPage}
+        // pageSize={pageSize}
+        // onChange={handlePageChange}
+      />
       <Table columns={columns} dataSource={users} rowKey="id" />
 
       <Modal
-        title={editingUser ? 'Edit User '+ editingUser!.email : 'Add User'}
+        title={editingUser ? "Edit User " + editingUser!.email : "Add User"}
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -247,35 +308,39 @@ const AdminPanel: React.FC = () => {
           <Form.Item
             name="userName"
             label="Username"
-            rules={[{ required: true, message: 'Please input the username!' }]}
+            rules={[{ required: true, message: "Please input the username!" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="email"
             label="Email"
-            rules={[{ required: true, message: 'Please input the email!' }]}
+            rules={[{ required: true, message: "Please input the email!" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="firstName"
             label="First Name"
-            rules={[{ required: true, message: 'Please input your first name!' }]}
+            rules={[
+              { required: true, message: "Please input your first name!" },
+            ]}
           >
             <Input prefix={<UserOutlined />} placeholder="First Name" />
           </Form.Item>
           <Form.Item
             name="lastName"
             label="Last Name"
-            rules={[{ required: true, message: 'Please input your last name!' }]}
+            rules={[
+              { required: true, message: "Please input your last name!" },
+            ]}
           >
             <Input prefix={<UserOutlined />} placeholder="Last Name" />
           </Form.Item>
           <Form.Item
             name="role"
             label="Role"
-            rules={[{ required: true, message: 'Please select a role!' }]}
+            rules={[{ required: true, message: "Please select a role!" }]}
           >
             <Select>
               <Option value="User">User</Option>
@@ -287,7 +352,9 @@ const AdminPanel: React.FC = () => {
             <Form.Item
               name="password"
               label="Password"
-              rules={[{ required: true, message: 'Please input the password!' }]}
+              rules={[
+                { required: true, message: "Please input the password!" },
+              ]}
             >
               <Input.Password />
             </Form.Item>
@@ -295,16 +362,30 @@ const AdminPanel: React.FC = () => {
         </Form>
       </Modal>
       <Modal
-        title={ "Change Password For " + (editingUser !== null && editingUser.email) }
+        title={
+          "Change Password For " + (editingUser !== null && editingUser.email)
+        }
         visible={isPasswordModalVisible}
         onOk={handlePasswordSave}
         onCancel={handlePasswordCancel}
       >
         <Form form={passwordForm} layout="vertical">
-        <Form.Item name="currentPassword" label="Current Password" rules={[{ required: true, message: 'Please input current password!' }]}>
+          <Form.Item
+            name="currentPassword"
+            label="Current Password"
+            rules={[
+              { required: true, message: "Please input current password!" },
+            ]}
+          >
             <Input.Password />
           </Form.Item>
-          <Form.Item name="newPassword" label="New Password" rules={[{ required: true, message: 'Please input the new password!' }]}>
+          <Form.Item
+            name="newPassword"
+            label="New Password"
+            rules={[
+              { required: true, message: "Please input the new password!" },
+            ]}
+          >
             <Input.Password />
           </Form.Item>
         </Form>

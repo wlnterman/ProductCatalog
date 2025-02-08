@@ -18,6 +18,7 @@ namespace ProductCatalog.Repository
     public interface IProductRepository
     {
         Task<PaginatedList<ProductDto>> GetAllProductsAsync(int page, int pageSize, string searchTerm);
+        Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product> GetProductByIdAsync(int id);
         Task AddProductAsync(Product product);
         Task UpdateProductAsync(Product product);

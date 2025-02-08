@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Input } from 'antd';
+import { debounce } from 'lodash';
+// import debounce from 'lodash/debounce';
 
 const { Search } = Input;
 
@@ -10,20 +12,26 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [value, setValue] = useState('');
 
-  const handleSearch = () => {
-    console.log("1231231231")
-    console.log(value);
-    onSearch(value);
+   // Debounce the search function to limit the number of calls
+   const debouncedSearch = useCallback(
+    debounce((searchValue: string) => {
+      onSearch(searchValue);
+    }, 500), // Adjust the debounce delay as needed
+    []
+  );
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+    debouncedSearch(newValue);
   };
   
   return (
     <Search
       placeholder="Search by product name2"
       value={value}
-      //onChange={(e) => onSearch(e.target.value)}
-      onChange={(e) => setValue(e.target.value)}
-      onSearch={handleSearch}
-      enterButton 
+      onChange={handleChange}
+      
       allowClear
       style={{ marginBottom: 16 }}
     />

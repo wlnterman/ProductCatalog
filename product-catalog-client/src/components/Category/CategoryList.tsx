@@ -101,24 +101,11 @@ const CategoryList: React.FC = () => {
   ];
 
   return (
-    <>
-      <Button type="primary" onClick={() => setIsModalVisible(true)}>
+    <div>
+      <Button type="primary" onClick={() => setIsModalVisible(true)} style={{ marginBottom: 16 }}>
         Add Category
       </Button>
       <PaginatedTable columns={columns} fetchData={getPagedCategories} />
-      <Table dataSource={categories} rowKey="id" style={{ marginTop: 20 }}>
-        <Table.Column title="Name" dataIndex="name" key="name" />
-        <Table.Column
-          title="Actions"
-          key="actions"
-          render={(text, record: Category) => (
-            <>
-              <Button onClick={() => handleEdit(record)} style={{ marginRight: 8 }}>Edit</Button>
-              <Button danger onClick={() => handleDelete(record.id)}>Delete</Button>
-            </>
-          )}
-        />
-      </Table>
       <Modal
         title={editingCategory ? 'Edit Category' : 'Add Category'}
         visible={isModalVisible}
@@ -144,7 +131,7 @@ const CategoryList: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </>
+      </div>
   );
 };
 

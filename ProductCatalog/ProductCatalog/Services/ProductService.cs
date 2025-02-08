@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using ProductCatalog.Repository;
+using ProductCatalog.Extensions;
 
 public interface IProductService
 {
@@ -28,9 +29,37 @@ public class ProductService : IProductService
         _productRepository = productRepository;
     }
 
-    public async Task<PaginatedList<ProductDto>> GetProductsAsync(int page, int pageSize, string searchTerm)
+    public async Task<PaginatedList<ProductDto>> GetProductsAsync(int pageNumber, int pageSize, string searchTerm) //int page, int pageSize, string searchTerm)
     {
-        return await _productRepository.GetAllProductsAsync(page, pageSize, searchTerm);
+        //return await _productRepository.GetAllProductsAsync(page, pageSize, searchTerm);
+
+        var products = await _productRepository.GetAllProductsAsync();
+
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            products = products.Where(p => p.Name.ContainsIgnoreCase(searchTerm));
+        }
+
+        var totalItems = products.Count();
+        var items = products.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+        var productDtoList = new List<ProductDto>();
+
+        foreach (var product in items)
+        {
+            productDtoList.Add(new ProductDto
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                CategoryId = product.CategoryId,
+                CategoryName = product.Category.Name,
+                GeneralNote = product.GeneralNote,
+                SpecialNote = product.SpecialNote
+            }); ;
+        }
+        return new PaginatedList<ProductDto>(productDtoList, totalItems, pageNumber, pageSize);
         //var products = await _context.Products
         //   .Include(p => p.Category)
         //   .Select(p => new ProductDto
