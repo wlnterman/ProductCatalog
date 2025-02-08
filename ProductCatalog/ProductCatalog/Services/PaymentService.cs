@@ -8,7 +8,12 @@ using System.Threading.Tasks;
 
 namespace ProductCatalog.Services
 {
-    public class PaymentService
+    public interface IPaymentService
+    {
+        Task<List<Payment>> GetPayments(int userId, int objectId, DateTime? startDate, DateTime? endDate);
+        Task<Payment> CreatePayment(Payment payment);
+    }
+    public class PaymentService : IPaymentService
     {
         private readonly ApplicationDbContext _context;
 

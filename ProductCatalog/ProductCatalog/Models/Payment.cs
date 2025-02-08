@@ -14,8 +14,9 @@ namespace ProductCatalog.Models
         [Required]
         public int UserId { get; set; }
 
-        [Required]
         public int ObjectId { get; set; }
+
+        public Apartment Apartment { get; set; }
 
         [Required]
         public DateTime Date { get; set; }
