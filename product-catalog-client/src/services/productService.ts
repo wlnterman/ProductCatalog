@@ -20,8 +20,14 @@ export const addProduct = async (product: CreateProductFormValues) => {
   return response.data;
 };
 
-export const getAllProducts = async () => {
-  const response = await axios.get(API_URL);
+export const getAllProducts = async (params: { page: number; pageSize: number; searchTerm?: string }) => {
+  const response = await axios.get(`${API_URL}`, {
+    params: {
+      page: params.page,
+      pageSize: params.pageSize,
+      searchTerm: params.searchTerm
+    },
+  });
   return response.data;
 };
 

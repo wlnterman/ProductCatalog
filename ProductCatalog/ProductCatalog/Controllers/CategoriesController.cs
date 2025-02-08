@@ -23,6 +23,14 @@ namespace ProductCatalog.Controllers
             return Ok(await _categoryService.GetCategoriesAsync());
         }
 
+        [HttpGet]
+        [Route("paged")]
+        public async Task<IActionResult> GetPagedCategories([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string searchTerm = null)
+        {
+            var pagedCategories = await _categoryService.GetPagedCategoriesAsync(page, pageSize, searchTerm);
+            return Ok(pagedCategories);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
