@@ -49,10 +49,8 @@ const LiveChart: React.FC = () => {
           </a>
         </div>
         <div className="page-header-box__content">
-          <div>
-            {header1}
-            {header2}
-          </div>
+          <div>{header1}</div>
+          <div>{header2}</div>
           <div>July 2024–September 2024</div>
           <div
             style={{
