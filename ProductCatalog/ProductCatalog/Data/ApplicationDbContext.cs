@@ -14,6 +14,8 @@ namespace ProductCatalog.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Apartment> Apartments { get; set; }
+        public DbSet<Payment> Payments { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -23,6 +25,10 @@ namespace ProductCatalog.Data
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Payment>()
+               .HasOne(p => p.Apartment)
+               .WithMany(c => c.Payments)
+               .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -1,0 +1,71 @@
+[Bb]in
+obj
+*.bak
+*.suo
+*.dotCover
+*.csproj.user
+*.ncrunchproject
+*.ncrunchsolution
+*.crunchproject.local.xml
+*.crunchsolution.cache
+*.crunchsolution.local.xml
+*.ncrunchsolution.user
+*.dxcache
+*.sln.DotSettings.user
+Thumbs.db
+*.csproj.user
+.vs
+TestResults
+.nuget
+.vs
+app_data
+.idea
+
+node_modules
+
+tmp/**/*
+**/Logs/**/*
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.env
+
+# Build directories
+dist/
+build/
+
+# Logs
+logs/
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# IntelliJ IDEA
+.idea/
+
+# Visual Studio Code
+.vscode/
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage/
+
+# Ant Design specific
+ant-design-pro/
+
+# Ignore test output
+test-results/
+
+# Ignore generated documentation
+docs/
+
+# Other
+*.log
+*.tmp
+*.swp

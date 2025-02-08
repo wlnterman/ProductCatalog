@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using ProductCatalog.Data;
 using ProductCatalog.Models;
 using ProductCatalog.Repository;
+using ProductCatalog.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +58,8 @@ namespace ProductCatalog
             //Services
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IApartmentService, ApartmentService>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAuthService, AuthService>();
